@@ -15,7 +15,8 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .Property(p => p.Id)
             .ValueGeneratedNever()
             .HasConversion(
-                id => id.Value.ToString(), // ToString() is important for upper/lowercase storing
-                value => ProjectId.Create(value));
+                // ToString() is important for upper/lowercase storing
+                id => id.Value.ToString(),
+                value => ProjectId.Create(value)!);
     }
 }

@@ -1,9 +1,5 @@
-# User specific
-**/.idea/**/workspace.xml
-**/.idea/**/tasks.xml
-**/.idea/shelf/*
-**/.idea/dictionaries
-**/.idea/httpRequests/
+# Idea specific
+**/.idea/
 
 # Sensitive or high-churn files
 **/.idea/**/dataSources/

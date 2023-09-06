@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common.Interfaces.Persistence;
-using Torello.Domain.Projects;
 
 namespace Torello.Api.Controllers;
 

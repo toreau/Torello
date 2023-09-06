@@ -1,5 +1,4 @@
 using Torello.Application.Common.Interfaces.Persistence;
-using Torello.Domain.Projects;
 using Torello.Infrastructure.Persistence.Repositories;
 
 namespace Torello.Infrastructure.Persistence;
