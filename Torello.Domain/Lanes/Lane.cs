@@ -28,4 +28,9 @@ public sealed class Lane : Entity<LaneId>
             title
         );
     }
+
+    public void AddIssue(Issue issue)
+    {
+        _issues.Add(issue);
+    }
 }
