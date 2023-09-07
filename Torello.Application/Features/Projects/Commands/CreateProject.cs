@@ -39,7 +39,7 @@ public sealed class CreateProjectController : ApiController
         var createProjectResult = await _mediator.Send(createProjectCommand);
 
         return createProjectResult.Match(
-            result => CreatedAtRoute("GetProjectById", new { id = result.ToResponse().Id }, result.ToResponse() ),
+            result => CreatedAtRoute(nameof(GetProjectByIdController.GetProjectById), new { id = result.ToResponse().Id }, result.ToResponse() ),
             errors => Problem(errors)
         );
     }
