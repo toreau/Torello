@@ -55,20 +55,24 @@ public class UnitOfWork : IUnitOfWork
 
     private async Task PublishDomainEvents()
     {
+        // Create a list of all the entities that may have domain events
         var entitiesWithDomainEvents = _dbContext.ChangeTracker
             .Entries()
             .Where(entityEntry => entityEntry.Entity is IDomainEventProvider)
             .ToList();
 
+        // Create a list of all the domain events
         var domainEvents = entitiesWithDomainEvents
             .SelectMany(entityEntry => ((IDomainEventProvider)entityEntry.Entity).DomainEvents())
             .ToList();
 
+        // Clear the domain events for each entity
         foreach (var entityEntry in entitiesWithDomainEvents)
             ((IDomainEventProvider)entityEntry.Entity).ClearDomainEvents();
 
         Console.WriteLine($"** About to publish {domainEvents.Count} domain event(s)!");
 
+        // Publish the domain events and await them
         IEnumerable<Task> tasks = domainEvents.Select(domainEvent => _publisher.Publish(domainEvent));
 
         await Task.WhenAll(tasks);
