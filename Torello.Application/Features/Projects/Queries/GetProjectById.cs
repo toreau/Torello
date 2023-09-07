@@ -67,7 +67,7 @@ internal sealed record GetProjectByIdResult(
     public GetProjectByIdResponse ToResponse()
         => new GetProjectByIdResponse(
             Project.Id.Value.ToString(),
-            Project.Name,
+            Project.Title,
             Project.CreatedAt.ToString("s"),
             Project.Boards.Select(
                 board => new GetProjectByIdBoardResult(board).ToResponse()).ToList());
@@ -75,7 +75,7 @@ internal sealed record GetProjectByIdResult(
 
 internal sealed record GetProjectByIdResponse(
     string Id,
-    string Name,
+    string Title,
     string CreatedAt,
     List<GetProjectByIdBoardResponse> Boards
 );
@@ -88,12 +88,12 @@ internal sealed record GetProjectByIdBoardResult(
     public GetProjectByIdBoardResponse ToResponse()
         => new GetProjectByIdBoardResponse(
             Board.Id.Value.ToString(),
-            Board.Name,
+            Board.Title,
             Board.CreatedAt.ToString("s"));
 }
 
 internal sealed record GetProjectByIdBoardResponse(
     string Id,
-    string Name,
+    string Title,
     string CreatedAt
 );

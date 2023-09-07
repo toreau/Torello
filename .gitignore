@@ -1,6 +1,6 @@
 # Torello
 **/*.db*
-Torello.Infrastructure/Migrations/*
+Torello.Infrastructure/Migrations/**
 
 # Idea
 **/.idea/

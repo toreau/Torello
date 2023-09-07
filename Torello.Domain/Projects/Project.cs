@@ -5,7 +5,7 @@ namespace Torello.Domain.Projects;
 
 public sealed class Project : Entity<ProjectId>
 {
-    public string Name { get; private set; }
+    public string Title { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
@@ -14,21 +14,21 @@ public sealed class Project : Entity<ProjectId>
 
     private Project(
         ProjectId id,
-        string name,
+        string title,
         DateTimeOffset createdAt
     ) : base(id)
     {
-        Name = name;
+        Title = title;
         CreatedAt = createdAt;
     }
 
     public static Project Create(
-        string name
+        string title
     )
     {
         return new Project(
             ProjectId.CreateUnique(),
-            name,
+            title,
             DateTimeOffset.UtcNow
         );
     }

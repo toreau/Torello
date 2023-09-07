@@ -5,7 +5,7 @@ namespace Torello.Domain.Boards;
 
 public class Board : Entity<BoardId>
 {
-    public string Name { get; private set; }
+    public string Title { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
@@ -14,21 +14,21 @@ public class Board : Entity<BoardId>
 
     private Board(
         BoardId id,
-        string name,
+        string title,
         DateTimeOffset createdAt
     ) : base(id)
     {
-        Name = name;
+        Title = title;
         CreatedAt = createdAt;
     }
 
     public static Board Create(
-        string name
+        string title
     )
     {
         return new Board(
             BoardId.CreateUnique(),
-            name,
+            title,
             DateTimeOffset.UtcNow
         );
     }

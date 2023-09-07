@@ -10,11 +10,11 @@ using Torello.Domain.Projects;
 namespace Torello.Application.Features.Projects.Commands;
 
 public sealed record CreateProjectRequest(
-    string Name
+    string Title
 )
 {
     public CreateProjectCommand ToCommand()
-        => new CreateProjectCommand(Name);
+        => new CreateProjectCommand(Title);
 }
 
 
@@ -39,7 +39,7 @@ public sealed class CreateProjectController : ApiController
         var createProjectResult = await _mediator.Send(createProjectCommand);
 
         return createProjectResult.Match(
-            result => CreatedAtRoute(nameof(GetProjectByIdController.GetProjectById), new { id = result.ToResponse().Id }, result.ToResponse() ),
+            result => CreatedAtRoute(nameof(GetProjectByIdController.GetProjectById), new { id = result.ToResponse().Id }, result.ToResponse()),
             errors => Problem(errors)
         );
     }
@@ -84,12 +84,12 @@ internal sealed record CreateProjectResult(
     public CreateProjectResponse ToResponse()
         => new CreateProjectResponse(
             Project.Id.Value.ToString(),
-            Project.Name,
+            Project.Title,
             Project.CreatedAt.ToString("s"));
 }
 
 internal sealed record CreateProjectResponse(
     string Id,
-    string Name,
+    string Title,
     string CreatedAt
 );

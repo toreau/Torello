@@ -58,7 +58,7 @@ internal sealed record GetAllProjectsResult(
     public GetAllProjectsResponse ToResponse()
         => new GetAllProjectsResponse(Projects.Select(p => new GetProjectResponse(
             p.Id.Value.ToString(),
-            p.Name, p.CreatedAt.ToString("s")
+            p.Title, p.CreatedAt.ToString("s")
         )).ToList());
 }
 
@@ -68,6 +68,6 @@ internal sealed record GetAllProjectsResponse(
 
 internal sealed record GetProjectResponse(
     string Id,
-    string Name,
+    string Title,
     string CreatedAt
 );
