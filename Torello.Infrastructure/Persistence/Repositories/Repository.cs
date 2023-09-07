@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Domain.Common.Primitives;
 
@@ -6,7 +7,7 @@ namespace Torello.Infrastructure.Persistence.Repositories;
 public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
 {
-    private readonly TorelloDbContext _dbContext;
+    protected readonly TorelloDbContext _dbContext;
 
     protected Repository(TorelloDbContext dbContext)
     {
@@ -15,7 +16,9 @@ public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEnti
 
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id)
     {
-        return await _dbContext.Set<TEntity>().FindAsync(id);
+        return await _dbContext.Set<TEntity>()
+            .SingleOrDefaultAsync(e => e.Id!.Equals(id));
+            // .FindAsync(id);
     }
 
     public async Task AddAsync(TEntity entity)

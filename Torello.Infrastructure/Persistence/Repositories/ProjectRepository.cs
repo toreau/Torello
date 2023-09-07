@@ -9,4 +9,11 @@ public class ProjectRepository : Repository<Project, ProjectId>, IProjectReposit
     public ProjectRepository(TorelloDbContext dbContext) : base(dbContext)
     {
     }
+
+    public async override Task<Project?> GetByIdAsync(ProjectId id)
+    {
+        return await _dbContext.Projects
+            .Include(p => p.Boards)
+            .SingleOrDefaultAsync(p => p.Id == id);
+    }
 }

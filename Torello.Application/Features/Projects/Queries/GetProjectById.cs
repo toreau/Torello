@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
+using Torello.Domain.Boards;
 using Torello.Domain.Common.Errors;
 using Torello.Domain.Projects;
 
@@ -67,10 +68,31 @@ internal sealed record GetProjectByIdResult(
         => new GetProjectByIdResponse(
             Project.Id.Value.ToString(),
             Project.Name,
-            Project.CreatedAt.ToString("s"));
+            Project.CreatedAt.ToString("s"),
+            Project.Boards.Select(
+                board => new GetProjectByIdBoardResult(board).ToResponse()).ToList());
 }
 
 internal sealed record GetProjectByIdResponse(
+    string Id,
+    string Name,
+    string CreatedAt,
+    List<GetProjectByIdBoardResponse> Boards
+);
+
+// TODO: Move this to 'Board' responsibility
+internal sealed record GetProjectByIdBoardResult(
+    Board Board
+)
+{
+    public GetProjectByIdBoardResponse ToResponse()
+        => new GetProjectByIdBoardResponse(
+            Board.Id.Value.ToString(),
+            Board.Name,
+            Board.CreatedAt.ToString("s"));
+}
+
+internal sealed record GetProjectByIdBoardResponse(
     string Id,
     string Name,
     string CreatedAt

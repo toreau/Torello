@@ -1,4 +1,8 @@
-# Idea specific
+# Torello
+**/*.db*
+Torello.Infrastructure/Migrations/*
+
+# Idea
 **/.idea/
 
 # Sensitive or high-churn files
@@ -9,7 +13,6 @@
 **/.idea/**/sqlDataSources.xml
 **/.idea/**/dynamic.xml
 
-# Rider
 # Rider auto-generates .iml files, and contentModel.xml
 **/.idea/**/*.iml
 **/.idea/**/contentModel.xml

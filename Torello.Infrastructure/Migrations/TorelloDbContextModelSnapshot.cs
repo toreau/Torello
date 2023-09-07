@@ -16,6 +16,28 @@ namespace Torello.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
+            modelBuilder.Entity("Torello.Domain.Boards.Board", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Boards");
+                });
+
             modelBuilder.Entity("Torello.Domain.Projects.Project", b =>
                 {
                     b.Property<string>("Id")
@@ -31,6 +53,18 @@ namespace Torello.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Boards.Board", b =>
+                {
+                    b.HasOne("Torello.Domain.Projects.Project", null)
+                        .WithMany("Boards")
+                        .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Projects.Project", b =>
+                {
+                    b.Navigation("Boards");
                 });
 #pragma warning restore 612, 618
         }
