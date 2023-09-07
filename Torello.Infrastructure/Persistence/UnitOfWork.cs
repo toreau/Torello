@@ -1,7 +1,6 @@
 using MediatR;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Domain.Common.Primitives;
-using Torello.Domain.Common.ValueObjects;
 using Torello.Infrastructure.Persistence.Repositories;
 
 namespace Torello.Infrastructure.Persistence;
