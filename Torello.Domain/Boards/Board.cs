@@ -3,7 +3,7 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Domain.Boards;
 
-public class Board : Entity<BoardId>
+public sealed class Board : Entity<BoardId>
 {
     public string Title { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }

@@ -2,7 +2,7 @@ using Torello.Domain.Common.Primitives;
 
 namespace Torello.Domain.Issues;
 
-public class Issue : Entity<IssueId>
+public sealed class Issue : Entity<IssueId>
 {
     public string Title { get; private set; }
     public string Description { get; private set; }

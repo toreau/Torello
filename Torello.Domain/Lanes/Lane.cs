@@ -3,7 +3,7 @@ using Torello.Domain.Issues;
 
 namespace Torello.Domain.Lanes;
 
-public class Lane : Entity<LaneId>
+public sealed class Lane : Entity<LaneId>
 {
     public string Title { get; private set; }
 
