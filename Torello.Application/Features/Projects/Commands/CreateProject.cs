@@ -10,16 +10,18 @@ using Torello.Domain.Projects;
 namespace Torello.Application.Features.Projects.Commands;
 
 public sealed record CreateProjectRequest(
-    string Title
+    string Title,
+    string Description
 )
 {
     public CreateProjectCommand ToCommand()
-        => new CreateProjectCommand(Title);
+        => new CreateProjectCommand(Title, Description);
 }
 
 
 public sealed record CreateProjectCommand(
-    string Name
+    string Title,
+    string Description
 ) : IRequest<ErrorOr<CreateProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
@@ -49,7 +51,7 @@ internal sealed class CreateProjectValidator : AbstractValidator<CreateProjectCo
 {
     internal CreateProjectValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Title)
             .NotEmpty().WithMessage("A project name must be specified!");
     }
 }
@@ -68,7 +70,10 @@ internal sealed class CreateProjectHandler : IRequestHandler<CreateProjectComman
         CancellationToken cancellationToken
     )
     {
-        var project = Project.Create(createProjectCommand.Name);
+        var project = Project.Create(
+            createProjectCommand.Title,
+            createProjectCommand.Description
+        );
 
         await _unitOfWork.Projects.AddAsync(project);
         await _unitOfWork.SaveChangesAsync();
@@ -85,11 +90,13 @@ internal sealed record CreateProjectResult(
         => new CreateProjectResponse(
             Project.Id.Value.ToString(),
             Project.Title,
+            Project.Description,
             Project.CreatedAt.ToString("s"));
 }
 
 internal sealed record CreateProjectResponse(
     string Id,
     string Title,
+    string Description,
     string CreatedAt
 );
