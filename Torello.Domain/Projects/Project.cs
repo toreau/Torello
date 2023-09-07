@@ -30,12 +30,16 @@ public sealed class Project : Entity<ProjectId>
         string description
     )
     {
-        return new Project(
+        var project = new Project(
             ProjectId.CreateUnique(),
             title,
             description,
             DateTimeOffset.UtcNow
         );
+
+        project.AddDomainEvent(new ProjectCreatedDomainEvent(project));
+
+        return project;
     }
 
     public void AddBoard(Board board)
