@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
+using Torello.Application.Features.Projects.Queries;
 using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Commands;
@@ -31,14 +32,14 @@ public sealed class CreateProjectController : ApiController
         _mediator = mediator;
     }
 
-    [HttpPost("/projects")]
+    [HttpPost("/projects", Name = "CreateProject")]
     public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
     {
         var createProjectCommand = createProjectRequest.ToCommand();
         var createProjectResult = await _mediator.Send(createProjectCommand);
 
         return createProjectResult.Match(
-            result => Ok(result.ToResponse()),
+            result => CreatedAtRoute("GetProjectById", new { id = result.ToResponse().Id }, result.ToResponse() ),
             errors => Problem(errors)
         );
     }
