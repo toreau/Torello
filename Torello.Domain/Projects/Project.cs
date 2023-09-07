@@ -37,4 +37,9 @@ public sealed class Project : Entity<ProjectId>
             DateTimeOffset.UtcNow
         );
     }
+
+    public void AddBoard(Board board)
+    {
+        _boards.Add(board);
+    }
 }

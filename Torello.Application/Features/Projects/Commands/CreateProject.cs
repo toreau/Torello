@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Application.Features.Projects.Queries;
+using Torello.Domain.Boards;
+using Torello.Domain.Lanes;
 using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Commands;
@@ -70,10 +72,20 @@ internal sealed class CreateProjectHandler : IRequestHandler<CreateProjectComman
         CancellationToken cancellationToken
     )
     {
+        // Create a new project with some defaults
         var project = Project.Create(
             createProjectCommand.Title,
             createProjectCommand.Description
         );
+
+        var board = Board.Create("Default board");
+        foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
+        {
+            var lane = Lane.Create(laneTitle);
+            board.AddLane(lane);
+        }
+
+        project.AddBoard(board);
 
         await _unitOfWork.Projects.AddAsync(project);
         await _unitOfWork.SaveChangesAsync();

@@ -32,4 +32,9 @@ public sealed class Board : Entity<BoardId>
             DateTimeOffset.UtcNow
         );
     }
+
+    public void AddLane(Lane lane)
+    {
+        _lanes.Add(lane);
+    }
 }
