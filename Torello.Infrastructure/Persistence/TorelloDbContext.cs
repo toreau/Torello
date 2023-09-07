@@ -27,8 +27,9 @@ public class TorelloDbContext : DbContext
         modelBuilder
             .ApplyConfigurationsFromAssembly(typeof(TorelloDbContext).Assembly);
 
-        if (Database.ProviderName != "Microsoft.EntityFrameworkCore.Sqlite")
-            return;
+        // I want lowercased and singular table names
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            entityType.SetTableName(entityType.DisplayName().ToLowerInvariant());
 
         // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
         // here: https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations#query-limitations
@@ -36,6 +37,9 @@ public class TorelloDbContext : DbContext
         // use the DateTimeOffsetToBinaryConverter
         // Based on: https://github.com/aspnet/EntityFrameworkCore/issues/10784#issuecomment-415769754
         // This only supports millisecond precision, but should be sufficient for most use cases.
+        if (Database.ProviderName != "Microsoft.EntityFrameworkCore.Sqlite")
+            return;
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             IEnumerable<PropertyInfo> properties = entityType.ClrType
