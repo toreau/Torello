@@ -14,6 +14,11 @@ public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEnti
         _dbContext = dbContext;
     }
 
+    public virtual async Task<IEnumerable<TEntity>> GetAll()
+    {
+        return await _dbContext.Set<TEntity>().ToListAsync();
+    }
+
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id)
     {
         return await _dbContext.Set<TEntity>()

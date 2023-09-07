@@ -38,6 +38,54 @@ namespace Torello.Infrastructure.Migrations
                     b.ToTable("Boards");
                 });
 
+            modelBuilder.Entity("Torello.Domain.Issues.Issue", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LaneId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("UpdatedAt")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LaneId");
+
+                    b.ToTable("Issues");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Lanes.Lane", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BoardId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.ToTable("Lanes");
+                });
+
             modelBuilder.Entity("Torello.Domain.Projects.Project", b =>
                 {
                     b.Property<string>("Id")
@@ -60,6 +108,30 @@ namespace Torello.Infrastructure.Migrations
                     b.HasOne("Torello.Domain.Projects.Project", null)
                         .WithMany("Boards")
                         .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Issues.Issue", b =>
+                {
+                    b.HasOne("Torello.Domain.Lanes.Lane", null)
+                        .WithMany("Issues")
+                        .HasForeignKey("LaneId");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Lanes.Lane", b =>
+                {
+                    b.HasOne("Torello.Domain.Boards.Board", null)
+                        .WithMany("Lanes")
+                        .HasForeignKey("BoardId");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Boards.Board", b =>
+                {
+                    b.Navigation("Lanes");
+                });
+
+            modelBuilder.Entity("Torello.Domain.Lanes.Lane", b =>
+                {
+                    b.Navigation("Issues");
                 });
 
             modelBuilder.Entity("Torello.Domain.Projects.Project", b =>

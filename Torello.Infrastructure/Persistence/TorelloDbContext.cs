@@ -2,6 +2,8 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Torello.Domain.Boards;
+using Torello.Domain.Issues;
+using Torello.Domain.Lanes;
 using Torello.Domain.Projects;
 
 namespace Torello.Infrastructure.Persistence;
@@ -14,6 +16,8 @@ public class TorelloDbContext : DbContext
 
     public DbSet<Project> Projects { get; set; }
     public DbSet<Board> Boards { get; set; }
+    public DbSet<Lane> Lanes { get; set; }
+    public DbSet<Issue> Issues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

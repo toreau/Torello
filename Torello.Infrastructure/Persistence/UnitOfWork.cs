@@ -8,14 +8,20 @@ public class UnitOfWork : IUnitOfWork
     private readonly TorelloDbContext _dbContext;
     private bool _isDisposed;
 
+    public IProjectRepository Projects { get; }
+    public IBoardRepository Boards { get; }
+    public ILaneRepository Lanes { get; }
+    public IIssueRepository Issues { get; }
+
     public UnitOfWork(TorelloDbContext dbContext)
     {
         _dbContext = dbContext;
 
         Projects = new ProjectRepository(dbContext);
+        Boards = new BoardRepository(dbContext);
+        Lanes = new LaneRepository(dbContext);
+        Issues = new IssueRepository(dbContext);
     }
-
-    public IProjectRepository Projects { get; }
 
     public async Task<int> SaveChangesAsync()
     {
