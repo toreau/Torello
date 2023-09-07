@@ -68,31 +68,33 @@ internal sealed record GetProjectByIdResult(
         => new GetProjectByIdResponse(
             Project.Id.Value.ToString(),
             Project.Title,
+            Project.Description,
             Project.CreatedAt.ToString("s"),
             Project.Boards.Select(
-                board => new GetProjectByIdBoardResult(board).ToResponse()).ToList());
+                board => new GetBoardResult(board).ToResponse()).ToList());
 }
 
 internal sealed record GetProjectByIdResponse(
     string Id,
     string Title,
+    string Description,
     string CreatedAt,
-    List<GetProjectByIdBoardResponse> Boards
+    List<GetBoardResponse> Boards
 );
 
 // TODO: Move this to 'Board' responsibility
-internal sealed record GetProjectByIdBoardResult(
+internal sealed record GetBoardResult(
     Board Board
 )
 {
-    public GetProjectByIdBoardResponse ToResponse()
-        => new GetProjectByIdBoardResponse(
+    public GetBoardResponse ToResponse()
+        => new GetBoardResponse(
             Board.Id.Value.ToString(),
             Board.Title,
             Board.CreatedAt.ToString("s"));
 }
 
-internal sealed record GetProjectByIdBoardResponse(
+internal sealed record GetBoardResponse(
     string Id,
     string Title,
     string CreatedAt
