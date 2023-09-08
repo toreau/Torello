@@ -2,7 +2,7 @@ using Torello.Domain.Common.ValueObjects;
 
 namespace Torello.Domain.Projects;
 
-public class ProjectId : EntityId<ProjectId>
+public sealed class ProjectId : EntityId<ProjectId>
 {
 }
 
