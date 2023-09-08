@@ -49,15 +49,14 @@ public sealed class CreateProjectController : ApiController
     }
 }
 
-internal sealed class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
+public sealed class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
 {
-    private const byte MinProjectNameLength = 2;
+    private const byte MinProjectNameLength = 4;
     private const byte MaxProjectNameLength = 64;
 
-    internal CreateProjectValidator()
+    public CreateProjectValidator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("A project name must be specified!")
             .MinimumLength(MinProjectNameLength).WithMessage($"The project name must be minimum {MinProjectNameLength} characters long!")
             .MaximumLength(MinProjectNameLength).WithMessage($"The project name must be maximum {MaxProjectNameLength} characters long!");
     }
