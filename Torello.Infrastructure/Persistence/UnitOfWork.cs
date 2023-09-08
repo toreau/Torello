@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork
 
     private bool _isDisposed;
 
+    public IUserRepository Users { get; }
     public IProjectRepository Projects { get; }
     public IBoardRepository Boards { get; }
     public ILaneRepository Lanes { get; }
@@ -22,6 +23,7 @@ public class UnitOfWork : IUnitOfWork
         _dbContext = dbContext;
         _publisher = publisher;
 
+        Users = new UserRepository(dbContext);
         Projects = new ProjectRepository(dbContext);
         Boards = new BoardRepository(dbContext);
         Lanes = new LaneRepository(dbContext);
