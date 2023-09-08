@@ -23,6 +23,15 @@ count.
 The biggest disadvantage is that GUIDs are 16 bytes, while a "traditional" identity is
 4 or 8 bytes (`uint32` and `uint64`, respectively).
 
+### Empty API project?
+
+To be fair, it's just _almost_ empty; it contains a `HealthController` that an
+orchestrator (or similar) can use to to figure out if the application is responding.
+
+The rest of the API is inside the Application domain, because an API _is_ an
+application. That's why the Presentation domain is also missing, because it's been
+slimmed down to the Application domain instead, because this being an API and all.
+
 ## TODO
 
 * Lots
