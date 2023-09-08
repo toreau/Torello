@@ -58,7 +58,7 @@ public sealed class CreateProjectValidator : AbstractValidator<CreateProjectComm
     {
         RuleFor(x => x.Title)
             .MinimumLength(MinProjectNameLength).WithMessage($"The project name must be minimum {MinProjectNameLength} characters long!")
-            .MaximumLength(MinProjectNameLength).WithMessage($"The project name must be maximum {MaxProjectNameLength} characters long!");
+            .MaximumLength(MaxProjectNameLength).WithMessage($"The project name must be maximum {MaxProjectNameLength} characters long!");
     }
 }
 
