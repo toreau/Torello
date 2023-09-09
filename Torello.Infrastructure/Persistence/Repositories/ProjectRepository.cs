@@ -10,6 +10,13 @@ public class ProjectRepository : Repository<Project, ProjectId>, IProjectReposit
     {
     }
 
+    public async override Task<IEnumerable<Project>> GetAllAsync()
+    {
+        return await _dbContext.Projects
+            .Include(p => p.Boards)
+            .ToListAsync();
+    }
+
     public async override Task<Project?> GetByIdAsync(ProjectId id)
     {
         return await _dbContext.Projects
