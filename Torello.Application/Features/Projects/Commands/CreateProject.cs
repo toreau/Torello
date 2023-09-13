@@ -20,7 +20,6 @@ public sealed record CreateProjectRequest(
         => new CreateProjectCommand(Title, Description);
 }
 
-
 public sealed record CreateProjectCommand(
     string Title,
     string Description
@@ -49,6 +48,7 @@ public sealed class CreateProjectController : ApiController
     }
 }
 
+// TODO: 'Create' and 'Update' should share the validator
 public sealed class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
 {
     private const byte MinProjectNameLength = 4;
@@ -107,7 +107,8 @@ internal sealed record CreateProjectResult(
             Project.Id.Value.ToString(),
             Project.Title,
             Project.Description,
-            Project.CreatedAt.ToString("s"));
+            Project.CreatedAt.ToString("s")
+        );
 }
 
 internal sealed record CreateProjectResponse(
