@@ -33,7 +33,7 @@ public sealed record UpdateProjectRequest(
 {
     public UpsertProjectCommand ToCommand()
         => new UpsertProjectCommand(
-            ProjectId.Create(Id.ToString()),
+            ProjectId.Create(Id),
             Title,
             Description
         );
