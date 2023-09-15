@@ -55,13 +55,13 @@ public sealed class UpsertProjectController : ApiController
         _mediator = mediator;
     }
 
-    [HttpPost("/projects", Name = "CreateProject")]
+    [HttpPost("/projects", Name = nameof(CreateProject))]
     public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
     {
         return await UpsertProject(createProjectRequest.ToCommand());
     }
 
-    [HttpPut("/projects", Name = "UpdateProject")]
+    [HttpPut("/projects", Name = nameof(UpdateProject))]
     public async Task<IActionResult> UpdateProject(UpdateProjectRequest updateProjectRequest)
     {
         return await UpsertProject(updateProjectRequest.ToCommand(), updateProjectRequest.Id);
