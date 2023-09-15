@@ -50,7 +50,7 @@ internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuer
         CancellationToken cancellationToken
     )
     {
-        if (ProjectId.Create(getProjectByIdQuery.Id.ToString()) is not {} projectId)
+        if (ProjectId.Create(getProjectByIdQuery.Id) is not {} projectId)
             return Errors.EntityId.Invalid;
 
         if (await _unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
