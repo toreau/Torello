@@ -10,7 +10,7 @@ using Torello.Domain.Projects;
 namespace Torello.Application.Features.Projects.Queries;
 
 public sealed record GetProjectByIdQuery(
-    string Id
+    Guid Id
 ) : IRequest<ErrorOr<GetProjectByIdResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
@@ -24,7 +24,7 @@ public sealed class GetProjectByIdController : ApiController
     }
 
     [HttpGet("/projects/{id}", Name = nameof(GetProjectById))]
-    public async Task<IActionResult> GetProjectById(string id)
+    public async Task<IActionResult> GetProjectById(Guid id)
     {
         var getProjectByIdQuery = new GetProjectByIdQuery(id);
         var getProjectByIdResult = await _mediator.Send(getProjectByIdQuery);
@@ -50,7 +50,7 @@ internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuer
         CancellationToken cancellationToken
     )
     {
-        if (ProjectId.Create(getProjectByIdQuery.Id) is not {} projectId)
+        if (ProjectId.Create(getProjectByIdQuery.Id.ToString()) is not {} projectId)
             return Errors.EntityId.Invalid;
 
         if (await _unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
