@@ -23,7 +23,7 @@ public sealed class GetProjectByIdController : ApiController
         _mediator = mediator;
     }
 
-    [HttpGet("/projects/{id}", Name = nameof(GetProjectById))]
+    [HttpGet("/projects/{id:guid}", Name = nameof(GetProjectById))]
     public async Task<IActionResult> GetProjectById(Guid id)
     {
         var getProjectByIdQuery = new GetProjectByIdQuery(id);
