@@ -23,7 +23,6 @@ public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEnti
     {
         return await _dbContext.Set<TEntity>()
             .SingleOrDefaultAsync(e => e.Id!.Equals(id));
-            // .FindAsync(id);
     }
 
     public async Task AddAsync(TEntity entity)
