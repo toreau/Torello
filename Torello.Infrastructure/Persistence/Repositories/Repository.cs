@@ -31,11 +31,6 @@ public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEnti
         await _dbContext.Set<TEntity>().AddAsync(entity);
     }
 
-    public void Update(TEntity entity)
-    {
-        _dbContext.Set<TEntity>().Update(entity);
-    }
-
     public void Remove(TEntity entity)
     {
         _dbContext.Set<TEntity>().Remove(entity);
