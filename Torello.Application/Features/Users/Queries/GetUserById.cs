@@ -26,8 +26,8 @@ public sealed class GetUserByIdController : ApiController
 
     [HttpGet("/users/{id:guid}", Name = nameof(GetUserById))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetUserByIdResponse))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(GetUserByIdResponse), 200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetUserById(Guid id)
     {
         var getUserByIdQuery = new GetUserByIdQuery(id);

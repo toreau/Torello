@@ -23,7 +23,7 @@ public sealed class GetAllProjectsController : ApiController
 
     [HttpGet("/projects", Name = nameof(GetAllProjects))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllProjectsResponse))]
+    [ProducesResponseType(typeof(GetAllProjectsResponse), 200)]
     public async Task<IActionResult> GetAllProjects()
     {
         var getAllProjectsQuery = new GetAllProjectsQuery();

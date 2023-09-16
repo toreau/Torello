@@ -42,8 +42,8 @@ public sealed class RegisterUserController : ApiController
 
     [HttpPost("/users", Name = nameof(RegisterUser))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RegisterUserResponse))]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(RegisterUserResponse), 201)]
+    [ProducesResponseType(409)]
     public async Task<IActionResult> RegisterUser(RegisterUserRequest registerUserRequest)
     {
         var registerUserCommand = registerUserRequest.ToCommand();

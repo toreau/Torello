@@ -27,8 +27,8 @@ public sealed class GetProjectByIdController : ApiController
 
     [HttpGet("/projects/{id:guid}", Name = nameof(GetProjectById))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetProjectByIdResponse))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(GetProjectByIdResponse), 200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetProjectById(Guid id)
     {
         var getProjectByIdQuery = new GetProjectByIdQuery(id);

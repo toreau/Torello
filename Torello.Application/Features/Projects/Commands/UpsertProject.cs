@@ -59,7 +59,7 @@ public sealed class UpsertProjectController : ApiController
 
     [HttpPost("/projects", Name = nameof(CreateProject))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpsertProjectResponse))]
+    [ProducesResponseType(typeof(UpsertProjectResponse), 201)]
     public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
     {
         return await UpsertProject(createProjectRequest.ToCommand());
@@ -67,7 +67,7 @@ public sealed class UpsertProjectController : ApiController
 
     [HttpPut("/projects", Name = nameof(UpdateProject))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpsertProjectResponse))]
+    [ProducesResponseType(typeof(UpsertProjectResponse), 200)]
     public async Task<IActionResult> UpdateProject(UpdateProjectRequest updateProjectRequest)
     {
         return await UpsertProject(updateProjectRequest.ToCommand(), updateProjectRequest.Id);

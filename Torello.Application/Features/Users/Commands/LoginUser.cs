@@ -41,8 +41,8 @@ public sealed class LoginUserController : ApiController
 
     [HttpPost("/login", Name = nameof(LoginUser))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginUserResponse))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(LoginUserResponse), 200)]
+    [ProducesResponseType(401)]
     public async Task<IActionResult> LoginUser(LoginUserRequest loginUserRequest)
     {
         var loginUserCommand = loginUserRequest.ToCommand();
