@@ -66,11 +66,13 @@ internal sealed record GetUserByIdResult(
     public GetUserByIdResponse ToResponse()
         => new GetUserByIdResponse(
             User.Id.Value,
-            User.Username
+            User.Username,
+            User.CreatedAt
         );
 }
 
 internal sealed record GetUserByIdResponse(
     Guid Id,
-    string Username
+    string Username,
+    DateTimeOffset CreatedAt
 );

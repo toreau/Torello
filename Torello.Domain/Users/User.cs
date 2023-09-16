@@ -7,6 +7,7 @@ public sealed class User : Entity<UserId>
 {
     public string Username { get; private set; }
     public string HashedPassword { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
     private readonly List<Project> _projects = new List<Project>();
@@ -15,11 +16,13 @@ public sealed class User : Entity<UserId>
     private User(
         UserId id,
         string username,
-        string hashedPassword
+        string hashedPassword,
+        DateTimeOffset createdAt
     ) : base(id)
     {
         Username = username;
         HashedPassword = hashedPassword;
+        CreatedAt = createdAt;
     }
 
     public static User Create(
@@ -30,7 +33,8 @@ public sealed class User : Entity<UserId>
         return new User(
             UserId.CreateUnique(),
             username,
-            hashedPassword
+            hashedPassword,
+            DateTimeOffset.UtcNow
         );
     }
 }
