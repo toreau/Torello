@@ -1,5 +1,7 @@
+using System.Net.Mime;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
@@ -24,6 +26,9 @@ public sealed class GetProjectByIdController : ApiController
     }
 
     [HttpGet("/projects/{id:guid}", Name = nameof(GetProjectById))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetProjectByIdResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProjectById(Guid id)
     {
         var getProjectByIdQuery = new GetProjectByIdQuery(id);

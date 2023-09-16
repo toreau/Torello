@@ -1,6 +1,8 @@
+using System.Net.Mime;
 using ErrorOr;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
@@ -56,12 +58,16 @@ public sealed class UpsertProjectController : ApiController
     }
 
     [HttpPost("/projects", Name = nameof(CreateProject))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpsertProjectResponse))]
     public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
     {
         return await UpsertProject(createProjectRequest.ToCommand());
     }
 
     [HttpPut("/projects", Name = nameof(UpdateProject))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpsertProjectResponse))]
     public async Task<IActionResult> UpdateProject(UpdateProjectRequest updateProjectRequest)
     {
         return await UpsertProject(updateProjectRequest.ToCommand(), updateProjectRequest.Id);

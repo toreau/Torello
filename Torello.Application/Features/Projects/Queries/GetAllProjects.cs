@@ -1,5 +1,7 @@
+using System.Net.Mime;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
@@ -19,8 +21,10 @@ public sealed class GetAllProjectsController : ApiController
         _mediator = mediator;
     }
 
-    [HttpGet("/projects", Name = "GetAllProjects")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("/projects", Name = nameof(GetAllProjects))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllProjectsResponse))]
+    public async Task<IActionResult> GetAllProjects()
     {
         var getAllProjectsQuery = new GetAllProjectsQuery();
         var getAllProjectsResult = await _mediator.Send(getAllProjectsQuery);
