@@ -1,6 +1,8 @@
+using System.Net.Mime;
 using ErrorOr;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces;
@@ -38,6 +40,9 @@ public sealed class LoginUserController : ApiController
     }
 
     [HttpPost("/login", Name = nameof(LoginUser))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginUserResponse))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> LoginUser(LoginUserRequest loginUserRequest)
     {
         var loginUserCommand = loginUserRequest.ToCommand();

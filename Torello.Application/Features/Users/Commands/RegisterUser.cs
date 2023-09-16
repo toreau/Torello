@@ -1,6 +1,8 @@
+using System.Net.Mime;
 using ErrorOr;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces;
@@ -39,6 +41,9 @@ public sealed class RegisterUserController : ApiController
     }
 
     [HttpPost("/users", Name = nameof(RegisterUser))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RegisterUserResponse))]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> RegisterUser(RegisterUserRequest registerUserRequest)
     {
         var registerUserCommand = registerUserRequest.ToCommand();
