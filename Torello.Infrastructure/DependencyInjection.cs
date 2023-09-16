@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
+using Torello.Application.Common.Settings;
 using Torello.Infrastructure.Authentication;
 using Torello.Infrastructure.Persistence;
 
@@ -40,6 +42,11 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
+        var jwtSettings = new JwtSettings();
+        configuration.Bind(JwtSettings.SectionName, jwtSettings);
+
+        services.AddSingleton(Options.Create(jwtSettings));
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 
         return services;

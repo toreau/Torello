@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
+using Torello.Application.Features.Users.Queries;
 using Torello.Domain.Common.Errors;
 using Torello.Domain.Users;
 
@@ -44,7 +45,10 @@ public sealed class RegisterUserController : ApiController
         var registerUserResult = await _mediator.Send(registerUserCommand);
 
         return registerUserResult.Match(
-            result => Ok(result.ToResponse()),
+            result => CreatedAtRoute(
+                nameof(GetUserByIdController.GetUserById),
+                new { id = result.ToResponse().Id },
+                result.ToResponse()),
             errors => Problem(errors)
         );
     }

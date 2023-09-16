@@ -15,5 +15,11 @@ public static partial class Errors
             code: "User.UsernameAlreadyExists",
             description: "Username already exists!"
         );
+
+        public static Error InvalidCredentials => Error.Custom(
+            type: CustomErrorTypes.Unauthorized,
+            code: "User.InvalidCredentials",
+            description: "Invalid credentials!"
+        );
     }
 }

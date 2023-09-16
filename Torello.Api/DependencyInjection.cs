@@ -42,30 +42,30 @@ public static class DependencyInjection
             });
 
             // Enable Swagger UI authentication functionality
-            // c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            // {
-            //     Name = "Authorization",
-            //     Description = "Please enter a valid token",
-            //     In = ParameterLocation.Header,
-            //     Type = SecuritySchemeType.Http,
-            //     BearerFormat = "JWT",
-            //     Scheme = "Bearer"
-            // });
-            //
-            // c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            // {
-            //     {
-            //         new OpenApiSecurityScheme
-            //         {
-            //             Reference = new OpenApiReference
-            //             {
-            //                 Type = ReferenceType.SecurityScheme,
-            //                 Id = "Bearer"
-            //             }
-            //         },
-            //         Array.Empty<string>()
-            //     }
-            // });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Please enter a valid token",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
 
             // Useful for grouping actions in the Swagger UI
             c.TagActionsBy(api =>
