@@ -15,4 +15,10 @@ public class UserRepository : Repository<User, UserId>, IUserRepository
         return await _dbContext.Users
             .SingleOrDefaultAsync(u => u.Id == id);
     }
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        return await _dbContext.Users
+            .SingleOrDefaultAsync(u => u.Username.Equals(username));
+    }
 }
