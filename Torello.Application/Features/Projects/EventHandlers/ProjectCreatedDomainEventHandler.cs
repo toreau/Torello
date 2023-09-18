@@ -9,12 +9,13 @@ internal sealed class ProjectCreatedDomainEventHandler : IDomainEventHandler<Pro
     {
     }
 
-    public Task Handle(
+    public async Task Handle(
         ProjectCreatedDomainEvent notification,
         CancellationToken cancellationToken
     )
     {
+        await Task.CompletedTask;
+
         Console.WriteLine($"** Project '{notification.Project.Title}' was created! **");
-        return Task.CompletedTask;
     }
 }
