@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Application.Features.Projects.Queries;
+using Torello.Contracts;
 using Torello.Domain.Common.Errors;
 using Torello.Domain.Projects;
 
@@ -42,7 +43,7 @@ public sealed record UpsertProjectCommand(
     ProjectId? Id,
     string Title,
     string Description
-) : IRequest<ErrorOr<UpsertProjectResult>>;
+) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
 public sealed class UpsertProjectController : ApiController
@@ -56,7 +57,7 @@ public sealed class UpsertProjectController : ApiController
 
     [HttpPost("/projects", Name = nameof(CreateProject))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(typeof(UpsertProjectResponse), 201)]
+    [ProducesResponseType(typeof(ProjectResponse), 201)]
     public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
     {
         return await UpsertProject(createProjectRequest.ToCommand());
@@ -64,7 +65,7 @@ public sealed class UpsertProjectController : ApiController
 
     [HttpPut("/projects", Name = nameof(UpdateProject))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(typeof(UpsertProjectResponse), 200)]
+    [ProducesResponseType(typeof(ProjectResponse), 200)]
     public async Task<IActionResult> UpdateProject(UpdateProjectRequest updateProjectRequest)
     {
         return await UpsertProject(updateProjectRequest.ToCommand(), updateProjectRequest.Id);
@@ -107,7 +108,7 @@ public sealed class UpsertProjectValidator : AbstractValidator<UpsertProjectComm
     }
 }
 
-internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectCommand, ErrorOr<UpsertProjectResult>>
+internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -116,7 +117,7 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<UpsertProjectResult>> Handle(
+    public async Task<ErrorOr<ProjectResult>> Handle(
         UpsertProjectCommand upsertProjectCommand,
         CancellationToken cancellationToken
     )
@@ -149,25 +150,7 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         // Save and return upserted result
         await _unitOfWork.SaveChangesAsync();
 
-        return new UpsertProjectResult(project);
+        return new ProjectResult(project);
 
     }
 }
-
-internal sealed record UpsertProjectResult(
-    Project Project
-)
-{
-    public UpsertProjectResponse ToResponse()
-        => new UpsertProjectResponse(
-            Project.Id.Value,
-            Project.Title,
-            Project.Description
-        );
-}
-
-internal sealed record UpsertProjectResponse(
-    Guid Id,
-    string Title,
-    string Description
-);
