@@ -11,7 +11,7 @@ public class Project : Entity<ProjectId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    public virtual User User { get; private set; }
+    public virtual User User { get; private set; } = null!;
     private readonly List<Board> _boards = new List<Board>();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
