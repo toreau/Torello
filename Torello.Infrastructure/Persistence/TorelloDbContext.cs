@@ -30,8 +30,12 @@ public class TorelloDbContext : DbContext
             .ApplyConfigurationsFromAssembly(typeof(TorelloDbContext).Assembly);
 
         // I want lowercased and singular table names
+        // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        //     entityType.SetTableName(entityType.DisplayName().ToLowerInvariant());
+
+        // I want singular table table names
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            entityType.SetTableName(entityType.DisplayName().ToLowerInvariant());
+            entityType.SetTableName(entityType.DisplayName());
 
         // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
         // here: https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations#query-limitations
