@@ -1,7 +1,6 @@
 using System.Net.Mime;
 using ErrorOr;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
