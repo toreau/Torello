@@ -32,6 +32,22 @@ The rest of the API is inside the Application domain, because an API _is_ an
 application. That's why the Presentation domain is also missing, because it's been
 slimmed down to the Application domain instead, because this being an API and all.
 
+### Authorization?
+
+Don't confuse _authentication_ and _authorization_. The former is _who_ you (potentially)
+are, while the latter is _what_ you can do.
+
+Partial authentication can happen inside controllers. Same as validation, this is _"soft
+authentication"_; we just make sure that the request is somehow authenticated.
+
+In the handler, however, the _"hard authentication and authorization"_ is done; we want to
+make sure that the request belongs to an authenticated entity (user) that _still exists_,
+and that the entity (user) is allowed to do what it tries to do.
+
+The thing is, you can have been authenticated at a point in time where you were allowed to
+be authenticated. But during the last hour or so, someone blocked your account. Therefore,
+on the controller level you are still _authenticated_, but the _handler_ should take care
+of what you are allowed to do no matter what.
 
 ## API overview
 
