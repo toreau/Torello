@@ -10,7 +10,7 @@ public class Board : Entity<BoardId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    public virtual Project Project { get; private set; }
+    public virtual Project Project { get; private set; } = null!;
     private readonly List<Lane> _lanes = new List<Lane>();
     public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 

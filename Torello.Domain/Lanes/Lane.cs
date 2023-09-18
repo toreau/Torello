@@ -9,7 +9,7 @@ public class Lane : Entity<LaneId>
     public string Title { get; private set; }
 
     // Navigation
-    public virtual Board Board { get; private set; }
+    public virtual Board Board { get; private set; } = null!;
     private readonly List<Issue> _issues = new List<Issue>();
     public virtual IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
 

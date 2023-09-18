@@ -12,7 +12,7 @@ public class Issue : Entity<IssueId>
     public DateTimeOffset? UpdatedAt { get; private set; }
 
     // Navigation
-    public virtual Lane Lane { get; private set; }
+    public virtual Lane Lane { get; private set; } = null!;
 
     private Issue(
         IssueId id,
