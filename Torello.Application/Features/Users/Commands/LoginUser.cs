@@ -2,6 +2,7 @@ using System.Net.Mime;
 using ErrorOr;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces;
@@ -29,6 +30,7 @@ public sealed record LoginUserCommand(
 ) : IRequest<ErrorOr<LoginUserResult>>;
 
 [ApiExplorerSettings(GroupName = "Authentication")]
+[AllowAnonymous]
 public sealed class LoginUserController : ApiController
 {
     private readonly IMediator _mediator;
