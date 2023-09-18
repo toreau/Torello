@@ -30,11 +30,24 @@ public sealed class User : Entity<UserId>
         string hashedPassword
     )
     {
-        return new User(
+        var user = new User(
             UserId.CreateUnique(),
             username,
             hashedPassword,
             DateTimeOffset.UtcNow
         );
+
+        // Add default/example project
+        user.AddProject(Project.Create(
+            "Your first project",
+            "Add sensible description of the project, if need be."
+        ));
+
+        return user;
+    }
+
+    public void AddProject(Project project)
+    {
+        _projects.Add(project);
     }
 }

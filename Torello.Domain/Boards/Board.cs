@@ -26,11 +26,17 @@ public sealed class Board : Entity<BoardId>
         string title
     )
     {
-        return new Board(
+        var board = new Board(
             BoardId.CreateUnique(),
             title,
             DateTimeOffset.UtcNow
         );
+
+        // Add some default/example lanes
+        foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
+            board.AddLane(Lane.Create(laneTitle));
+
+        return board;
     }
 
     public void AddLane(Lane lane)

@@ -145,13 +145,6 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
                 upsertProjectCommand.Description
             );
 
-            var board = Board.Create("Default board");
-
-            foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
-                board.AddLane(Lane.Create(laneTitle));
-
-            project.AddBoard(board);
-
             await _unitOfWork.Projects.AddAsync(project);
         }
 

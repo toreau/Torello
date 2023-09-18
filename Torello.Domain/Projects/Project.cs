@@ -37,6 +37,9 @@ public sealed class Project : Entity<ProjectId>
             DateTimeOffset.UtcNow
         );
 
+        // Add default/example board
+        project.AddBoard(Board.Create("Example board"));
+
         project.AddDomainEvent(new ProjectCreatedDomainEvent(project));
 
         return project;

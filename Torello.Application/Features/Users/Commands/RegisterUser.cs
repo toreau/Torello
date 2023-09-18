@@ -104,6 +104,7 @@ internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand,
             _passwordHasher.HashPassword(registerUserCommand.Password)
         );
 
+        // Add and save
         await _unitOfWork.Users.AddAsync(user);
         await _unitOfWork.SaveChangesAsync();
 
