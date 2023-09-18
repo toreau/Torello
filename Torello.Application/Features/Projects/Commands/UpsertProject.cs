@@ -133,10 +133,12 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         // Update an existing project?
         if (upsertProjectCommand.Id is not null)
         {
+            // Does the project exist?
             project = await _unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.Id);
             if (project is null)
                 return Errors.Projects.NotFound;
 
+            // Is the project's owner the same as the one logged in?
             if (project.User.Id != user.Id)
                 return Errors.Users.InvalidCredentials;
 
