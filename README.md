@@ -32,6 +32,45 @@ The rest of the API is inside the Application domain, because an API _is_ an
 application. That's why the Presentation domain is also missing, because it's been
 slimmed down to the Application domain instead, because this being an API and all.
 
+
+## API overview
+
+### Users:
+
+- [x] Create a User: `POST /users`
+- [x] Log in a User `POST /login`
+- [ ] Retrieve a User: `GET /users/{user_id}`
+- [ ] Update a User: `PUT /users/{user_id}`
+- [ ] Delete a User: `DELETE /users/{user_id}`
+
+### Projects:
+- [ ] Create a Project: `POST /projects`
+- [ ] Retrieve all Projects for a User: `GET /users/{user_id}/projects`
+- [x] Retrieve a Project: `GET /projects/{project_id}`
+- [x] Update a Project: `PUT /projects/{project_id}`
+- [ ] Delete a Project: `DELETE /projects/{project_id}`
+
+### Boards:
+- [ ] Create a Board: `POST /boards`
+- [ ] Retrieve all Boards for a Project: `GET /projects/{project_id}/boards`
+- [ ] Retrieve a Board: `GET /boards/{board_id}`
+- [ ] Update a Board: `PUT /boards/{board_id}`
+- [ ] Delete a Board: `DELETE /boards/{board_id}`
+
+### Lanes:
+- [ ] Create a Lane: `POST /lanes`
+- [ ] Retrieve all Lanes for a Board: `GET /boards/{board_id}/lanes`
+- [ ] Retrieve a Lane: `GET /lanes/{lane_id}`
+- [ ] Update a Lane: `PUT /lanes/{lane_id}`
+- [ ] Delete a Lane: `DELETE /lanes/{lane_id}`
+
+### Issues:
+- [ ] Create an Issue: `POST /issues`
+- [ ] Retrieve all Issues for a Lane: `GET /lanes/{lane_id}/issues`
+- [ ] Retrieve an Issue: `GET /issues/{issue_id}`
+- [ ] Update an Issue: `PUT /issues/{issue_id}`
+- [ ] Delete an Issue: `DELETE /issues/{issue_id}`
+
 ## TODO
 
 * Lots
