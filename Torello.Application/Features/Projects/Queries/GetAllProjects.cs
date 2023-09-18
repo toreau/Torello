@@ -4,11 +4,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
-using Torello.Domain.Projects;
+using Torello.Contracts;
 
 namespace Torello.Application.Features.Projects.Queries;
 
-internal sealed record GetAllProjectsQuery : IRequest<ErrorOr<GetAllProjectsResult>>;
+internal sealed record GetAllProjectsQuery(
+) : IRequest<ErrorOr<ProjectsResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
 public sealed class GetAllProjectsController : ApiController
@@ -22,20 +23,20 @@ public sealed class GetAllProjectsController : ApiController
 
     [HttpGet("/projects", Name = nameof(GetAllProjects))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(typeof(GetAllProjectsResponse), 200)]
+    [ProducesResponseType(typeof(ProjectsResponse), 200)]
     public async Task<IActionResult> GetAllProjects()
     {
         var getAllProjectsQuery = new GetAllProjectsQuery();
-        var getAllProjectsResult = await _mediator.Send(getAllProjectsQuery);
+        var projectsResult = await _mediator.Send(getAllProjectsQuery);
 
-        return getAllProjectsResult.Match(
+        return projectsResult.Match(
             result => Ok(result.ToResponse()),
             errors => Problem(errors)
         );
     }
 }
 
-internal sealed class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, ErrorOr<GetAllProjectsResult>>
+internal sealed class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, ErrorOr<ProjectsResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -44,36 +45,12 @@ internal sealed class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuer
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<GetAllProjectsResult>> Handle(
+    public async Task<ErrorOr<ProjectsResult>> Handle(
         GetAllProjectsQuery getAllProjectsQuery,
         CancellationToken cancellationToken)
     {
         var projects = await _unitOfWork.Projects.GetAllAsync();
 
-        return new GetAllProjectsResult(projects);
+        return new ProjectsResult(projects);
     }
 }
-
-internal sealed record GetAllProjectsResult(
-    IEnumerable<Project> Projects
-)
-{
-    public GetAllProjectsResponse ToResponse()
-        => new GetAllProjectsResponse(Projects.Select(p => new GetProjectResponse(
-            p.Id.Value.ToString(),
-            p.Title,
-            p.Description,
-            p.CreatedAt.ToString("s")
-        )).ToList());
-}
-
-internal sealed record GetAllProjectsResponse(
-    List<GetProjectResponse> Projects
-);
-
-internal sealed record GetProjectResponse(
-    string Id,
-    string Title,
-    string Description,
-    string CreatedAt
-);

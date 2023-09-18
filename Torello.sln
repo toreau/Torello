@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torello.Application", "Tore
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torello.Api", "Torello.Api\Torello.Api.csproj", "{151FB49C-148C-40CE-BDEC-A3A5802D90F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Torello.Contracts", "Torello.Contracts\Torello.Contracts.csproj", "{BADB8635-F093-44A3-AB32-EC1EECBBC990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,7 @@ Global
 		{D0A08272-D06E-4C0C-8301-D9A7EB3A281E} = {CD065688-CA24-4489-BF9A-F87008E6CE88}
 		{1E7995C8-A400-4BBC-A07A-5934FAABBEE4} = {CD065688-CA24-4489-BF9A-F87008E6CE88}
 		{151FB49C-148C-40CE-BDEC-A3A5802D90F6} = {CD065688-CA24-4489-BF9A-F87008E6CE88}
+		{BADB8635-F093-44A3-AB32-EC1EECBBC990} = {CD065688-CA24-4489-BF9A-F87008E6CE88}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0963045E-5B8D-46DE-8A0E-EDF8199CB307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -40,5 +43,9 @@ Global
 		{151FB49C-148C-40CE-BDEC-A3A5802D90F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151FB49C-148C-40CE-BDEC-A3A5802D90F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151FB49C-148C-40CE-BDEC-A3A5802D90F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BADB8635-F093-44A3-AB32-EC1EECBBC990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BADB8635-F093-44A3-AB32-EC1EECBBC990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BADB8635-F093-44A3-AB32-EC1EECBBC990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BADB8635-F093-44A3-AB32-EC1EECBBC990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

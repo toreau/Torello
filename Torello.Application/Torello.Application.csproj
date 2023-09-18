@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Torello.Contracts\Torello.Contracts.csproj" />
       <ProjectReference Include="..\Torello.Domain\Torello.Domain.csproj" />
     </ItemGroup>
 
