@@ -4,5 +4,5 @@ namespace Torello.Application.Common.Interfaces;
 
 public interface IAuthService
 {
-    Task<User?> GetLoggedInUser();
+    Task<User?> GetCurrentUserAsync();
 }

@@ -4,6 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
+using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Application.Features.Projects.Queries;
 using Torello.Contracts;
@@ -111,10 +112,12 @@ public sealed class UpsertProjectValidator : AbstractValidator<UpsertProjectComm
 internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthService _authService;
 
-    public UpsertProjectHandler(IUnitOfWork unitOfWork)
+    public UpsertProjectHandler(IUnitOfWork unitOfWork, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
+        _authService = authService;
     }
 
     public async Task<ErrorOr<ProjectResult>> Handle(
@@ -122,6 +125,9 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         CancellationToken cancellationToken
     )
     {
+        if (await _authService.GetCurrentUserAsync() is not { } user)
+            return Errors.Users.InvalidCredentials;
+
         Project? project;
 
         // Update an existing project?
@@ -130,6 +136,9 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
             project = await _unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.Id);
             if (project is null)
                 return Errors.Projects.NotFound;
+
+            if (project.User.Id != user.Id)
+                return Errors.Users.InvalidCredentials;
 
             project.Update(
                 upsertProjectCommand.Title,
@@ -144,13 +153,12 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
                 upsertProjectCommand.Description
             );
 
-            await _unitOfWork.Projects.AddAsync(project);
+            user.AddProject(project);
         }
 
         // Save and return upserted result
         await _unitOfWork.SaveChangesAsync();
 
         return new ProjectResult(project);
-
     }
 }

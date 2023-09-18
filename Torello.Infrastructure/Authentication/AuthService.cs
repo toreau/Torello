@@ -17,7 +17,7 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
     }
 
-    public UserId? GetLoggedInUserId()
+    private UserId? GetCurrentUserId()
     {
         HttpContext? httpContext = _httpContextAccessor.HttpContext;
 
@@ -33,9 +33,9 @@ public class AuthService : IAuthService
         return userId;
     }
 
-    public async Task<User?> GetLoggedInUser()
+    public async Task<User?> GetCurrentUserAsync()
     {
-        return GetLoggedInUserId() is { } userId
+        return GetCurrentUserId() is { } userId
             ? await _unitOfWork.Users.GetByIdAsync(userId)
             : null;
     }
