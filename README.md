@@ -44,7 +44,7 @@ slimmed down to the Application domain instead, because this being an API and al
 - [ ] Delete a User: `DELETE /users/{user_id}`
 
 ### Projects:
-- [ ] Create a Project: `POST /projects`
+- [x] Create a Project: `POST /projects`
 - [ ] Retrieve all Projects for a User: `GET /users/{user_id}/projects`
 - [x] Retrieve a Project: `GET /projects/{project_id}`
 - [x] Update a Project: `PUT /projects/{project_id}`
