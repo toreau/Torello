@@ -39,7 +39,7 @@ slimmed down to the Application domain instead, because this being an API and al
 
 - [x] Create a User: `POST /users`
 - [x] Log in a User `POST /login`
-- [ ] Retrieve a User: `GET /users/{user_id}`
+- [x] Retrieve a User: `GET /users/{user_id}`
 - [ ] Update a User: `PUT /users/{user_id}`
 - [ ] Delete a User: `DELETE /users/{user_id}`
 
