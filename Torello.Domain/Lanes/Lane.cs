@@ -3,13 +3,13 @@ using Torello.Domain.Issues;
 
 namespace Torello.Domain.Lanes;
 
-public sealed class Lane : Entity<LaneId>
+public class Lane : Entity<LaneId>
 {
     public string Title { get; private set; }
 
     // Navigation
     private readonly List<Issue> _issues = new List<Issue>();
-    public IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
+    public virtual IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
 
     private Lane(
         LaneId id,
@@ -33,4 +33,8 @@ public sealed class Lane : Entity<LaneId>
     {
         _issues.Add(issue);
     }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public Lane(LaneId id) : base(id) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

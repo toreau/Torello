@@ -3,14 +3,14 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Domain.Boards;
 
-public sealed class Board : Entity<BoardId>
+public class Board : Entity<BoardId>
 {
     public string Title { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
     private readonly List<Lane> _lanes = new List<Lane>();
-    public IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
+    public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 
     private Board(
         BoardId id,
@@ -43,4 +43,8 @@ public sealed class Board : Entity<BoardId>
     {
         _lanes.Add(lane);
     }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public Board(BoardId id) : base(id) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

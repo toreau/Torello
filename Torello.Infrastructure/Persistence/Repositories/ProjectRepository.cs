@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Domain.Projects;
+using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Persistence.Repositories;
 

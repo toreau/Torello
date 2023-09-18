@@ -33,7 +33,7 @@ public static class DependencyInjection
     )
     {
         services.AddDbContext<TorelloDbContext>(options =>
-            options.UseSqlite(configuration.GetConnectionString("Default")));
+            options.UseLazyLoadingProxies().UseSqlite(configuration.GetConnectionString("Default")));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

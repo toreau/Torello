@@ -3,7 +3,7 @@ using Torello.Domain.Projects;
 
 namespace Torello.Domain.Users;
 
-public sealed class User : Entity<UserId>
+public class User : Entity<UserId>
 {
     public string Username { get; private set; }
     public string HashedPassword { get; private set; }
@@ -11,7 +11,7 @@ public sealed class User : Entity<UserId>
 
     // Navigation
     private readonly List<Project> _projects = new List<Project>();
-    public IReadOnlyList<Project> Projects => _projects.AsReadOnly();
+    public virtual IReadOnlyList<Project> Projects => _projects.AsReadOnly();
 
     private User(
         UserId id,
@@ -50,4 +50,8 @@ public sealed class User : Entity<UserId>
     {
         _projects.Add(project);
     }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public User(UserId id) : base(id) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

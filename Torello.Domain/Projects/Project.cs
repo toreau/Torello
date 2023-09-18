@@ -3,7 +3,7 @@ using Torello.Domain.Common.Primitives;
 
 namespace Torello.Domain.Projects;
 
-public sealed class Project : Entity<ProjectId>
+public class Project : Entity<ProjectId>
 {
     public string Title { get; private set; }
     public string Description { get; private set; }
@@ -11,7 +11,7 @@ public sealed class Project : Entity<ProjectId>
 
     // Navigation
     private readonly List<Board> _boards = new List<Board>();
-    public IReadOnlyList<Board> Boards => _boards.AsReadOnly();
+    public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
     private Project(
         ProjectId id,
@@ -58,4 +58,8 @@ public sealed class Project : Entity<ProjectId>
     {
         _boards.Add(board);
     }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public Project(ProjectId id) : base(id) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
