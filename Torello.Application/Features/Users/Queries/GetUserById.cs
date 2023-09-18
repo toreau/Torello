@@ -24,13 +24,13 @@ public sealed class GetUserByIdController : ApiController
         _mediator = mediator;
     }
 
-    [HttpGet("/users/{id:guid}", Name = nameof(GetUserById))]
+    [HttpGet("/users/{userId:guid}", Name = nameof(GetUserById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(UserResponse), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetUserById(Guid id)
+    public async Task<IActionResult> GetUserById(Guid userId)
     {
-        var getUserByIdQuery = new GetUserByIdQuery(id);
+        var getUserByIdQuery = new GetUserByIdQuery(userId);
         var getUserByIdResult = await _mediator.Send(getUserByIdQuery);
 
         return getUserByIdResult.Match(

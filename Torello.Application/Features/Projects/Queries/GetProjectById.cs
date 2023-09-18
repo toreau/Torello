@@ -24,13 +24,13 @@ public sealed class GetProjectByIdController : ApiController
         _mediator = mediator;
     }
 
-    [HttpGet("/projects/{id:guid}", Name = nameof(GetProjectById))]
+    [HttpGet("/projects/{projectId:guid}", Name = nameof(GetProjectById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ProjectResponse), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetProjectById(Guid id)
+    public async Task<IActionResult> GetProjectById(Guid projectId)
     {
-        var getProjectByIdQuery = new GetProjectByIdQuery(id);
+        var getProjectByIdQuery = new GetProjectByIdQuery(projectId);
         var getProjectByIdResult = await _mediator.Send(getProjectByIdQuery);
 
         return getProjectByIdResult.Match(
