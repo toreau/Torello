@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
+using Torello.Contracts;
 using Torello.Domain.Common.Errors;
 using Torello.Domain.Users;
 
@@ -11,7 +12,7 @@ namespace Torello.Application.Features.Users.Queries;
 
 public sealed record GetUserByIdQuery(
     Guid Id
-) : IRequest<ErrorOr<GetUserByIdResult>>;
+) : IRequest<ErrorOr<UserResult>>;
 
 [ApiExplorerSettings(GroupName = "Users")]
 public sealed class GetUserByIdController : ApiController
@@ -25,7 +26,7 @@ public sealed class GetUserByIdController : ApiController
 
     [HttpGet("/users/{id:guid}", Name = nameof(GetUserById))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(typeof(GetUserByIdResponse), 200)]
+    [ProducesResponseType(typeof(UserResponse), 200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetUserById(Guid id)
     {
@@ -39,7 +40,7 @@ public sealed class GetUserByIdController : ApiController
     }
 }
 
-internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, ErrorOr<GetUserByIdResult>>
+internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, ErrorOr<UserResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -48,7 +49,7 @@ internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Err
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<GetUserByIdResult>> Handle(
+    public async Task<ErrorOr<UserResult>> Handle(
         GetUserByIdQuery getUserByIdQuery,
         CancellationToken cancellationToken
     )
@@ -59,24 +60,6 @@ internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Err
         if (await _unitOfWork.Users.GetByIdAsync(userId) is not { } user)
             return Errors.Users.NotFound;
 
-        return new GetUserByIdResult(user);
+        return new UserResult(user);
     }
 }
-
-internal sealed record GetUserByIdResult(
-    User User
-)
-{
-    public GetUserByIdResponse ToResponse()
-        => new GetUserByIdResponse(
-            User.Id.Value,
-            User.Username,
-            User.CreatedAt
-        );
-}
-
-internal sealed record GetUserByIdResponse(
-    Guid Id,
-    string Username,
-    DateTimeOffset CreatedAt
-);

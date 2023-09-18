@@ -7,6 +7,7 @@ using Torello.Application.Common;
 using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Application.Features.Users.Queries;
+using Torello.Contracts;
 using Torello.Domain.Common.Errors;
 using Torello.Domain.Users;
 
@@ -27,7 +28,7 @@ public sealed record RegisterUserRequest(
 public sealed record RegisterUserCommand(
     string Username,
     string Password
-) : IRequest<ErrorOr<RegisterUserResult>>;
+) : IRequest<ErrorOr<UserResult>>;
 
 [ApiExplorerSettings(GroupName = "Users")]
 public sealed class RegisterUserController : ApiController
@@ -41,7 +42,7 @@ public sealed class RegisterUserController : ApiController
 
     [HttpPost("/users", Name = nameof(RegisterUser))]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(typeof(RegisterUserResponse), 201)]
+    [ProducesResponseType(typeof(UserResponse), 201)]
     [ProducesResponseType(409)]
     public async Task<IActionResult> RegisterUser(RegisterUserRequest registerUserRequest)
     {
@@ -77,7 +78,7 @@ public sealed class RegisterUserValidator : AbstractValidator<RegisterUserComman
     }
 }
 
-internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, ErrorOr<RegisterUserResult>>
+internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, ErrorOr<UserResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
@@ -88,7 +89,7 @@ internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand,
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<ErrorOr<RegisterUserResult>> Handle(
+    public async Task<ErrorOr<UserResult>> Handle(
         RegisterUserCommand registerUserCommand,
         CancellationToken cancellationToken
     )
@@ -108,22 +109,6 @@ internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand,
         await _unitOfWork.Users.AddAsync(user);
         await _unitOfWork.SaveChangesAsync();
 
-        return new RegisterUserResult(user);
+        return new UserResult(user);
     }
 }
-
-internal sealed record RegisterUserResult(
-    User User
-)
-{
-    public RegisterUserResponse ToResponse()
-        => new RegisterUserResponse(
-            User.Id.Value,
-            User.Username
-        );
-}
-
-internal sealed record RegisterUserResponse(
-    Guid Id,
-    string Username
-);
