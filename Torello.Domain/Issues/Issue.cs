@@ -1,4 +1,5 @@
 using Torello.Domain.Common.Primitives;
+using Torello.Domain.Lanes;
 
 namespace Torello.Domain.Issues;
 
@@ -9,6 +10,9 @@ public class Issue : Entity<IssueId>
     public IssuePriority Priority { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? UpdatedAt { get; private set; }
+
+    // Navigation
+    public virtual Lane Lane { get; private set; }
 
     private Issue(
         IssueId id,

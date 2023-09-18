@@ -1,5 +1,6 @@
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Lanes;
+using Torello.Domain.Projects;
 
 namespace Torello.Domain.Boards;
 
@@ -9,6 +10,7 @@ public class Board : Entity<BoardId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
+    public virtual Project Project { get; private set; }
     private readonly List<Lane> _lanes = new List<Lane>();
     public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 

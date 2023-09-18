@@ -1,3 +1,4 @@
+using Torello.Domain.Boards;
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Issues;
 
@@ -8,6 +9,7 @@ public class Lane : Entity<LaneId>
     public string Title { get; private set; }
 
     // Navigation
+    public virtual Board Board { get; private set; }
     private readonly List<Issue> _issues = new List<Issue>();
     public virtual IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
 
