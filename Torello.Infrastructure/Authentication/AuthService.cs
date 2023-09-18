@@ -17,7 +17,7 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
     }
 
-    private UserId? GetLoggedInUserId()
+    public UserId? GetLoggedInUserId()
     {
         HttpContext? httpContext = _httpContextAccessor.HttpContext;
 
