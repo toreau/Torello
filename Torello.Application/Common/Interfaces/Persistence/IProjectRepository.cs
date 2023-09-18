@@ -1,5 +1,4 @@
 using Torello.Domain.Projects;
-using Torello.Domain.Users;
 
 namespace Torello.Application.Common.Interfaces.Persistence;
 

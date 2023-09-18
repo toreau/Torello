@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Application.Features.Projects.Queries;
-using Torello.Domain.Boards;
 using Torello.Domain.Common.Errors;
-using Torello.Domain.Lanes;
 using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Commands;
