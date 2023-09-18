@@ -156,7 +156,7 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
             user.AddProject(project);
         }
 
-        // Save and return upserted result
+        // Save and return the updated/created result
         await _unitOfWork.SaveChangesAsync();
 
         return new ProjectResult(project);
