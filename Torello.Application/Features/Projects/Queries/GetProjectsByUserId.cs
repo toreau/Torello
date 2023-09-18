@@ -14,7 +14,7 @@ public sealed record GetProjectsByUserIdQuery(
     Guid UserId
 ) : IRequest<ErrorOr<ProjectsResult>>;
 
-[ApiExplorerSettings(GroupName = "Projects")]
+[ApiExplorerSettings(GroupName = "Users \u2192 Projects")]
 public class GetProjectsByUserIdController : ApiController
 {
     private readonly IMediator _mediator;
