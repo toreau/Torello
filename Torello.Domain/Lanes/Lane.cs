@@ -1,6 +1,7 @@
 using Torello.Domain.Boards;
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Issues;
+using Torello.Domain.Users;
 
 namespace Torello.Domain.Lanes;
 
@@ -30,6 +31,15 @@ public class Lane : Entity<LaneId>
             title
         );
     }
+
+    public void Update(
+        string title
+    )
+    {
+        Title = title;
+    }
+
+    public UserId UserId => Board.UserId;
 
     public void AddIssue(Issue issue)
     {

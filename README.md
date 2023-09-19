@@ -75,7 +75,7 @@ of what you are allowed to do no matter what.
 ### Lanes:
 - [ ] Create a Lane: `POST /boards/{boardId}/lanes`
 - [ ] Retrieve all Lanes for a Board: `GET /boards/{boardId}/lanes`
-- [ ] Retrieve a Lane: `GET /lanes/{laneId}`
+- [x] Retrieve a Lane: `GET /lanes/{laneId}`
 - [ ] Update a Lane: `PUT /lanes/{laneId}`
 - [ ] Delete a Lane: `DELETE /lanes/{laneId}`
 
