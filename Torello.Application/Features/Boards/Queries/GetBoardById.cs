@@ -32,9 +32,9 @@ public sealed class GetBoardByIdController : ApiController
     public async Task<IActionResult> GetBoardById(Guid boardId)
     {
         var getBoardByIdQuery = new GetBoardByIdQuery(boardId);
-        var getBoardByIdResult = await _mediator.Send(getBoardByIdQuery);
+        var boardResult = await _mediator.Send(getBoardByIdQuery);
 
-        return getBoardByIdResult.Match(
+        return boardResult.Match(
             result => Ok(result.ToResponse()),
             errors => Problem(errors)
         );
