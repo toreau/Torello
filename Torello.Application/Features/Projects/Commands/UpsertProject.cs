@@ -18,11 +18,11 @@ public sealed record UpsertProjectRequest(
     string Description
 )
 {
-    public UpsertProjectCommand ToCommand(ProjectId? id = null)
+    public UpsertProjectCommand ToCommand(ProjectId? projectId = null)
         => new UpsertProjectCommand(
             Title,
             Description,
-            id
+            projectId
         );
 }
 
