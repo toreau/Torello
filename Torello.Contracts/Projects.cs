@@ -2,6 +2,7 @@ using Torello.Domain.Projects;
 
 namespace Torello.Contracts;
 
+// Single
 public sealed record ProjectResult(
     Project Project
 )
@@ -15,6 +16,14 @@ public sealed record ProjectResult(
         );
 }
 
+public sealed record ProjectResponse(
+    Guid Id,
+    string Title,
+    string Description,
+    DateTimeOffset CreatedAt
+);
+
+// Multiple
 public sealed record ProjectsResult(
     IEnumerable<Project> Projects
 )
@@ -22,13 +31,6 @@ public sealed record ProjectsResult(
     public ProjectsResponse ToResponse()
         => new ProjectsResponse(Projects.Select(project => new ProjectResult(project).ToResponse()));
 }
-
-public sealed record ProjectResponse(
-    Guid Id,
-    string Title,
-    string Description,
-    DateTimeOffset CreatedAt
-);
 
 public sealed record ProjectsResponse(
     IEnumerable<ProjectResponse> Projects
