@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Domain.Projects;
 
