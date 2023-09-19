@@ -38,7 +38,7 @@ public sealed record UpsertLaneCommand(
     BoardId? BoardId
 ) : IRequest<ErrorOr<LaneResult>>;
 
-[ApiExplorerSettings(GroupName = "Boards → Lanes")]
+[ApiExplorerSettings(GroupName = "Lanes")]
 public sealed class UpsertLaneController : ApiController
 {
     private readonly IMediator _mediator;

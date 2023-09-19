@@ -48,7 +48,6 @@ public sealed class UpsertBoardController : ApiController
         _mediator = mediator;
     }
 
-    [ApiExplorerSettings(GroupName = "Projects → Boards")]
     [HttpPost("/projects/{projectId:guid}/boards", Name = nameof(CreateBoard))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardResponse), 201)]

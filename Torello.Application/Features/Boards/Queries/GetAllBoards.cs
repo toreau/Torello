@@ -15,7 +15,7 @@ internal sealed record GetAllBoardsQuery(
     Guid ProjectId
 ) : IRequest<ErrorOr<BoardsResult>>;
 
-[ApiExplorerSettings(GroupName = "Projects → Boards")]
+[ApiExplorerSettings(GroupName = "Boards")]
 public sealed class GetAllBoardsController : ApiController
 {
     private readonly IMediator _mediator;

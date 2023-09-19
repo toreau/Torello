@@ -15,7 +15,7 @@ internal sealed record GetAllLanesQuery(
     Guid BoardId
 ) : IRequest<ErrorOr<LanesResult>>;
 
-[ApiExplorerSettings(GroupName = "Boards → Lanes")]
+[ApiExplorerSettings(GroupName = "Lanes")]
 public class GetAllLanesController : ApiController
 {
     private readonly IMediator _mediator;
