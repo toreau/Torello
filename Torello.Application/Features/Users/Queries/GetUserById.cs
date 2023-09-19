@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
 using Torello.Application.Common.Interfaces.Persistence;
@@ -15,6 +16,7 @@ public sealed record GetUserByIdQuery(
 ) : IRequest<ErrorOr<UserResult>>;
 
 [ApiExplorerSettings(GroupName = "Users")]
+[AllowAnonymous]
 public sealed class GetUserByIdController : ApiController
 {
     private readonly IMediator _mediator;
