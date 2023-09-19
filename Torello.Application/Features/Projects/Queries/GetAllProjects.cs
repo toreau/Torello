@@ -3,8 +3,10 @@ using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
+using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Contracts;
+using Torello.Domain.Common.Errors;
 
 namespace Torello.Application.Features.Projects.Queries;
 
@@ -38,19 +40,20 @@ public sealed class GetAllProjectsController : ApiController
 
 internal sealed class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, ErrorOr<ProjectsResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthService _authService;
 
-    public GetAllProjectsHandler(IUnitOfWork unitOfWork)
+    public GetAllProjectsHandler(IAuthService authService)
     {
-        _unitOfWork = unitOfWork;
+        _authService = authService;
     }
 
     public async Task<ErrorOr<ProjectsResult>> Handle(
         GetAllProjectsQuery getAllProjectsQuery,
         CancellationToken cancellationToken)
     {
-        var projects = await _unitOfWork.Projects.GetAllAsync();
+        if (await _authService.GetCurrentUserAsync() is not { } user)
+            return Errors.Users.InvalidCredentials;
 
-        return new ProjectsResult(projects);
+        return new ProjectsResult(user.Projects);
     }
 }
