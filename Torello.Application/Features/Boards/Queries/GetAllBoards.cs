@@ -28,6 +28,7 @@ public sealed class GetAllBoardsController : ApiController
     [HttpGet("/projects/{projectId:guid}/boards")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardsResponse), 200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GetAllBoards(Guid projectId)
     {
         var getAllBoardsQuery = new GetAllBoardsQuery(projectId);
