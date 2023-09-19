@@ -54,37 +54,37 @@ of what you are allowed to do no matter what.
 ### Users:
 - [x] Create a User: `POST /users`
 - [x] Log in a User `POST /login`
-- [x] Retrieve a User: `GET /users/{user_id}`
-- [ ] Update a User: `PUT /users/{user_id}`
-- [ ] Delete a User: `DELETE /users/{user_id}`
+- [x] Retrieve a User: `GET /users/{userId}`
+- [ ] Update a User: `PUT /users/{userId}`
+- [ ] Delete a User: `DELETE /users/{userId}`
 
 ### Projects:
 - [x] Create a Project: `POST /projects`
-- [x] Retrieve all Projects for a User: `GET /users/{user_id}/projects`
-- [x] Retrieve a Project: `GET /projects/{project_id}`
-- [x] Update a Project: `PUT /projects/{project_id}`
-- [ ] Delete a Project: `DELETE /projects/{project_id}`
+- [x] Retrieve all Projects for a User: `GET /users/{userId}/projects`
+- [x] Retrieve a Project: `GET /projects/{projectId}`
+- [x] Update a Project: `PUT /projects/{projectId}`
+- [ ] Delete a Project: `DELETE /projects/{projectId}`
 
 ### Boards:
-- [x] Create a Board: `POST /projects/{project_id}/boards`
-- [x] Retrieve all Boards for a Project: `GET /projects/{project_id}/boards`
-- [x] Retrieve a Board: `GET /boards/{board_id}`
-- [x] Update a Board: `PUT /boards/{board_id}`
-- [ ] Delete a Board: `DELETE /boards/{board_id}`
+- [x] Create a Board: `POST /projects/{projectId}/boards`
+- [x] Retrieve all Boards for a Project: `GET /projects/{projectId}/boards`
+- [x] Retrieve a Board: `GET /boards/{boardId}`
+- [x] Update a Board: `PUT /boards/{boardId}`
+- [ ] Delete a Board: `DELETE /boards/{boardId}`
 
 ### Lanes:
 - [ ] Create a Lane: `POST /lanes`
-- [ ] Retrieve all Lanes for a Board: `GET /boards/{board_id}/lanes`
-- [ ] Retrieve a Lane: `GET /lanes/{lane_id}`
-- [ ] Update a Lane: `PUT /lanes/{lane_id}`
-- [ ] Delete a Lane: `DELETE /lanes/{lane_id}`
+- [ ] Retrieve all Lanes for a Board: `GET /boards/{boardId}/lanes`
+- [ ] Retrieve a Lane: `GET /lanes/{laneId}`
+- [ ] Update a Lane: `PUT /lanes/{laneId}`
+- [ ] Delete a Lane: `DELETE /lanes/{laneId}`
 
 ### Issues:
 - [ ] Create an Issue: `POST /issues`
-- [ ] Retrieve all Issues for a Lane: `GET /lanes/{lane_id}/issues`
-- [ ] Retrieve an Issue: `GET /issues/{issue_id}`
-- [ ] Update an Issue: `PUT /issues/{issue_id}`
-- [ ] Delete an Issue: `DELETE /issues/{issue_id}`
+- [ ] Retrieve all Issues for a Lane: `GET /lanes/{laneId}/issues`
+- [ ] Retrieve an Issue: `GET /issues/{issueId}`
+- [ ] Update an Issue: `PUT /issues/{issueId}`
+- [ ] Delete an Issue: `DELETE /issues/{issueId}`
 
 ## TODO
 
