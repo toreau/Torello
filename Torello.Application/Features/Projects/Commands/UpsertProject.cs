@@ -29,7 +29,7 @@ public sealed record UpsertProjectRequest(
 public sealed record UpsertProjectCommand(
     string Title,
     string Description,
-    ProjectId? Id
+    ProjectId? ProjectId
 ) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
@@ -68,7 +68,7 @@ public sealed class UpsertProjectController : ApiController
             {
                 var response = result.ToResponse();
 
-                return upsertProjectCommand.Id is null
+                return upsertProjectCommand.ProjectId is null
                     ? CreatedAtRoute(
                         nameof(GetProjectByIdController.GetProjectById),
                         new { projectId = response.Id },
@@ -115,10 +115,10 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         Project? project;
 
         // Update an existing project?
-        if (upsertProjectCommand.Id is not null)
+        if (upsertProjectCommand.ProjectId is not null)
         {
             // Does the project exist?
-            project = await _unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.Id);
+            project = await _unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.ProjectId);
             if (project is null)
                 return Errors.Projects.NotFound;
 
