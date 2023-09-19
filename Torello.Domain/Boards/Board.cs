@@ -1,6 +1,7 @@
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Lanes;
 using Torello.Domain.Projects;
+using Torello.Domain.Users;
 
 namespace Torello.Domain.Boards;
 
@@ -40,6 +41,15 @@ public class Board : Entity<BoardId>
 
         return board;
     }
+
+    public void Update(
+        string title
+    )
+    {
+        Title = title;
+    }
+
+    public UserId UserId => Project.User.Id;
 
     public void AddLane(Lane lane)
     {
