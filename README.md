@@ -67,7 +67,7 @@ of what you are allowed to do no matter what.
 
 ### Boards:
 - [x] Create a Board: `POST /projects/{project_id}/boards`
-- [ ] Retrieve all Boards for a Project: `GET /projects/{project_id}/boards`
+- [x] Retrieve all Boards for a Project: `GET /projects/{project_id}/boards`
 - [x] Retrieve a Board: `GET /boards/{board_id}`
 - [x] Update a Board: `PUT /boards/{board_id}`
 - [ ] Delete a Board: `DELETE /boards/{board_id}`
