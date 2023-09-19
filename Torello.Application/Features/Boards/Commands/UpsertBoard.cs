@@ -52,6 +52,7 @@ public sealed class UpsertBoardController : ApiController
     [HttpPost("/projects/{projectId:guid}/boards", Name = nameof(CreateBoard))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardResponse), 201)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> CreateBoard(Guid projectId, UpsertBoardRequest upsertBoardRequest)
     {
         return await UpsertBoard(upsertBoardRequest.ToCommand(ProjectId.Create(projectId)));
