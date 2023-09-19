@@ -12,7 +12,7 @@ using Torello.Domain.Projects;
 namespace Torello.Application.Features.Projects.Queries;
 
 public sealed record GetProjectByIdQuery(
-    Guid Id
+    Guid ProjectId
 ) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
@@ -57,7 +57,7 @@ internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuer
         CancellationToken cancellationToken
     )
     {
-        if (ProjectId.Create(getProjectByIdQuery.Id) is not { } projectId)
+        if (ProjectId.Create(getProjectByIdQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;
 
         if (await _authService.GetCurrentUserAsync() is not { } user)
