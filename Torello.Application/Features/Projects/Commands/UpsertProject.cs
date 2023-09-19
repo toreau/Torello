@@ -13,37 +13,23 @@ using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Commands;
 
-public sealed record CreateProjectRequest(
+public sealed record UpsertProjectRequest(
     string Title,
     string Description
 )
 {
-    public UpsertProjectCommand ToCommand()
+    public UpsertProjectCommand ToCommand(ProjectId? id = null)
         => new UpsertProjectCommand(
-            null,
             Title,
-            Description
-        );
-}
-
-public sealed record UpdateProjectRequest(
-    Guid Id,
-    string Title,
-    string Description
-)
-{
-    public UpsertProjectCommand ToCommand()
-        => new UpsertProjectCommand(
-            ProjectId.Create(Id),
-            Title,
-            Description
+            Description,
+            id
         );
 }
 
 public sealed record UpsertProjectCommand(
-    ProjectId? Id,
     string Title,
-    string Description
+    string Description,
+    ProjectId? Id
 ) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
@@ -59,40 +45,38 @@ public sealed class UpsertProjectController : ApiController
     [HttpPost("/projects", Name = nameof(CreateProject))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ProjectResponse), 201)]
-    public async Task<IActionResult> CreateProject(CreateProjectRequest createProjectRequest)
+    public async Task<IActionResult> CreateProject(UpsertProjectRequest upsertProjectRequest)
     {
-        return await UpsertProject(createProjectRequest.ToCommand());
+        return await UpsertProject(upsertProjectRequest.ToCommand());
     }
 
-    [HttpPut("/projects", Name = nameof(UpdateProject))]
+    [HttpPut("/projects/{projectId:guid}", Name = nameof(UpdateProject))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ProjectResponse), 200)]
-    public async Task<IActionResult> UpdateProject(UpdateProjectRequest updateProjectRequest)
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdateProject(Guid projectId, UpsertProjectRequest upsertProjectRequest)
     {
-        return await UpsertProject(updateProjectRequest.ToCommand(), updateProjectRequest.Id);
+        return await UpsertProject(upsertProjectRequest.ToCommand(ProjectId.Create(projectId)));
     }
 
-    private async Task<IActionResult> UpsertProject(UpsertProjectCommand upsertProjectCommand, Guid? id = null)
+    private async Task<IActionResult> UpsertProject(UpsertProjectCommand upsertProjectCommand)
     {
         var upsertProjectResult = await _mediator.Send(upsertProjectCommand);
 
-        if (id is null)
-        {
-            return upsertProjectResult.Match(
-                result => CreatedAtRoute(
-                    nameof(GetProjectByIdController.GetProjectById),
-                    new { id = result.ToResponse().Id },
-                    result.ToResponse()),
-                errors => Problem(errors)
-            );
-        }
-        else
-        {
-            return upsertProjectResult.Match(
-                result => Ok(result.ToResponse()),
-                errors => Problem(errors)
-            );
-        }
+        return upsertProjectResult.Match(
+            result =>
+            {
+                var response = result.ToResponse();
+
+                return upsertProjectCommand.Id is null
+                    ? CreatedAtRoute(
+                        nameof(GetProjectByIdController.GetProjectById),
+                        new { projectId = response.Id },
+                        response)
+                    : Ok(response);
+            },
+            errors => Problem(errors)
+        );
     }
 }
 
