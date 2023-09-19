@@ -52,7 +52,6 @@ of what you are allowed to do no matter what.
 ## API overview
 
 ### Users:
-
 - [x] Create a User: `POST /users`
 - [x] Log in a User `POST /login`
 - [x] Retrieve a User: `GET /users/{user_id}`
