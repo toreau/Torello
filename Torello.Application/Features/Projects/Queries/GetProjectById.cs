@@ -3,6 +3,7 @@ using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
+using Torello.Application.Common.Interfaces;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Contracts;
 using Torello.Domain.Common.Errors;
@@ -43,10 +44,12 @@ public sealed class GetProjectByIdController : ApiController
 internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthService _authService;
 
-    public GetProjectByIdHandler(IUnitOfWork unitOfWork)
+    public GetProjectByIdHandler(IUnitOfWork unitOfWork, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
+        _authService = authService;
     }
 
     public async Task<ErrorOr<ProjectResult>> Handle(
@@ -57,8 +60,14 @@ internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuer
         if (ProjectId.Create(getProjectByIdQuery.Id) is not { } projectId)
             return Errors.EntityId.Invalid;
 
+        if (await _authService.GetCurrentUserAsync() is not { } user)
+            return Errors.Users.InvalidCredentials;
+
         if (await _unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
+
+        if (project.User.Id != user.Id)
+            return Errors.Users.InvalidCredentials;
 
         return new ProjectResult(project);
     }
