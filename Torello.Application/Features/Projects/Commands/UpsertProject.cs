@@ -98,14 +98,14 @@ public sealed class UpsertProjectController : ApiController
 
 public sealed class UpsertProjectValidator : AbstractValidator<UpsertProjectCommand>
 {
-    private const byte MinProjectNameLength = 4;
-    private const byte MaxProjectNameLength = 64;
+    private const byte MinProjectTitleLength = 4;
+    private const byte MaxProjectTitleLength = 64;
 
     public UpsertProjectValidator()
     {
          RuleFor(x => x.Title)
-             .MinimumLength(MinProjectNameLength).WithMessage($"The project name must be minimum {MinProjectNameLength} characters long!")
-             .MaximumLength(MaxProjectNameLength).WithMessage($"The project name must be maximum {MaxProjectNameLength} characters long!");
+             .MinimumLength(MinProjectTitleLength).WithMessage($"The project title must be minimum {MinProjectTitleLength} characters long!")
+             .MaximumLength(MaxProjectTitleLength).WithMessage($"The project title must be maximum {MaxProjectTitleLength} characters long!");
     }
 }
 
