@@ -138,7 +138,7 @@ internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, E
         else
         {
             // Does the lane exist?
-            if (await _unitOfWork.Lanes.GetByIdAsync(upsertIssueCommand.LaneId) is not { } lane)
+            if (await _unitOfWork.Lanes.GetByIdAsync(upsertIssueCommand.LaneId!) is not { } lane)
                 return Errors.Lanes.NotFound;
 
             issue = Issue.Create(
