@@ -79,7 +79,7 @@ public sealed class UpsertLaneController : ApiController
                 return upsertLaneCommand.LaneId is null
                     ? CreatedAtRoute(
                         nameof(GetLaneByIdController.GetLaneById),
-                        new { boardId = response.Id },
+                        new { laneId = response.Id },
                         response)
                     : Ok(response);
             },

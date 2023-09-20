@@ -54,7 +54,7 @@ public sealed class RegisterUserController : ApiController
         return registerUserResult.Match(
             result => CreatedAtRoute(
                 nameof(GetUserByIdController.GetUserById),
-                new { id = result.ToResponse().Id },
+                new { userId = result.ToResponse().Id },
                 result.ToResponse()),
             errors => Problem(errors)
         );
