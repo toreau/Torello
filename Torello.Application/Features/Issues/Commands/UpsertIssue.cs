@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using ErrorOr;
 using FluentValidation;
 using MediatR;
@@ -52,11 +53,19 @@ public sealed class UpsertIssueController : ApiController
         _mediator = mediator;
     }
 
+    [HttpPost("/lanes/{laneId:guid}/lanes", Name = nameof(CreateIssue))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(IssueResponse), 201)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> CreateIssue(Guid laneId, UpsertIssueRequest upsertIssueRequest)
     {
         return await UpsertIssue(upsertIssueRequest.ToCommand(LaneId.Create(laneId)));
     }
 
+    [HttpPut("/issues/{issueId:guid}", Name = nameof(UpdateIssue))]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(IssueResponse), 200)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> UpdateIssue(Guid issueId, UpsertIssueRequest upsertIssueRequest)
     {
         return await UpsertIssue(upsertIssueRequest.ToCommand(IssueId.Create(issueId)));
