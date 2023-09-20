@@ -66,7 +66,7 @@ internal sealed class GetBoardByIdHandler : IRequestHandler<GetBoardByIdQuery, E
         if (await _unitOfWork.Boards.GetByIdAsync(boardId) is not { } board)
             return Errors.Boards.NotFound;
 
-        if (board.UserId != user.Id)
+        if (board.User.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new BoardResult(board);

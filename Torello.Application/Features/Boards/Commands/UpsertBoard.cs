@@ -132,7 +132,7 @@ internal sealed class UpsertBoardHandler : IRequestHandler<UpsertBoardCommand, E
                 return Errors.Boards.NotFound;
 
             // Is the board's owner the same as the one logged in?
-            if (board.UserId != user.Id)
+            if (board.User.Id != user.Id)
                 return Errors.Users.InvalidCredentials;
 
             board.Update(upsertBoardCommand.Title);

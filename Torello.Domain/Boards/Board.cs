@@ -49,7 +49,7 @@ public class Board : Entity<BoardId>
         Title = title;
     }
 
-    public UserId UserId => Project.User.Id;
+    public User User => Project.User;
 
     public void AddLane(Lane lane)
     {

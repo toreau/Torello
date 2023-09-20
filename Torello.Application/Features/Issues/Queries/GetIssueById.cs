@@ -66,7 +66,7 @@ internal sealed class GetIssueByIdHandler : IRequestHandler<GetIssueByIdQuery, E
         if (await _unitOfWork.Issues.GetByIdAsync(issueId) is not { } issue)
             return Errors.Issues.NotFound;
 
-        if (issue.UserId != user.Id)
+        if (issue.User.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new IssueResult(issue);

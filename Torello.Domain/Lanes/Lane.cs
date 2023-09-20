@@ -39,7 +39,7 @@ public class Lane : Entity<LaneId>
         Title = title;
     }
 
-    public UserId UserId => Board.UserId;
+    public User User => Board.User;
 
     public void AddIssue(Issue issue)
     {

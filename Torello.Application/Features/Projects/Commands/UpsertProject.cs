@@ -97,11 +97,17 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAuthService _authService;
+    private readonly IUserAccessService _userAccessService;
 
-    public UpsertProjectHandler(IUnitOfWork unitOfWork, IAuthService authService)
+    public UpsertProjectHandler(
+        IUnitOfWork unitOfWork,
+        IAuthService authService,
+        IUserAccessService userAccessService
+    )
     {
         _unitOfWork = unitOfWork;
         _authService = authService;
+        _userAccessService = userAccessService;
     }
 
     public async Task<ErrorOr<ProjectResult>> Handle(
@@ -122,8 +128,8 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
             if (project is null)
                 return Errors.Projects.NotFound;
 
-            // Is the project's owner the same as the one logged in?
-            if (project.User.Id != user.Id)
+            // Can the currently logged in user access it?
+            if (!await _userAccessService.CurrentUserCanAccess(project))
                 return Errors.Users.InvalidCredentials;
 
             project.Update(

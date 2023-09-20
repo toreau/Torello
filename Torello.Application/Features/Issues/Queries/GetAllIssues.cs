@@ -66,7 +66,7 @@ internal sealed class GetAllIssuesHandler : IRequestHandler<GetAllIssuesQuery, E
         if (await _unitOfWork.Lanes.GetByIdAsync(laneId) is not { } lane)
             return Errors.Lanes.NotFound;
 
-        if (lane.UserId != user.Id)
+        if (lane.User.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new IssuesResult(lane.Issues);

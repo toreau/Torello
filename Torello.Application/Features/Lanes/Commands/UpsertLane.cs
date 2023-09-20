@@ -131,7 +131,7 @@ internal sealed class UpsertLaneHandler : IRequestHandler<UpsertLaneCommand, Err
                 return Errors.Lanes.NotFound;
 
             // Is the lane's owner the same as the one logged in?
-            if (lane.UserId != user.Id)
+            if (lane.User.Id != user.Id)
                 return Errors.Users.InvalidCredentials;
 
             lane.Update(upsertLaneCommand.Title);

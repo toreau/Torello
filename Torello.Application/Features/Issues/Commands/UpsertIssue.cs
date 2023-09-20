@@ -135,7 +135,7 @@ internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, E
                 return Errors.Issues.NotFound;
 
             // Is the issue's owner the same as the one logged in?
-            if (issue.UserId != user.Id)
+            if (issue.User.Id != user.Id)
                 return Errors.Users.InvalidCredentials;
 
             issue.Update(

@@ -57,7 +57,7 @@ public class Issue : Entity<IssueId>
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 
-    public UserId UserId => Lane.UserId;
+    public User User => Lane.User;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public Issue(IssueId id) : base(id) { }
