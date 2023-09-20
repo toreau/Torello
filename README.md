@@ -60,7 +60,7 @@ of what you are allowed to do no matter what.
 
 ### Projects:
 - [x] Create a Project: `POST /projects`
-- [x] Retrieve all Projects for a User: `GET /users/{userId}/projects`
+- [x] Retrieve all Projects for The Authenticated User: `GET /projects`
 - [x] Retrieve a Project: `GET /projects/{projectId}`
 - [x] Update a Project: `PUT /projects/{projectId}`
 - [ ] Delete a Project: `DELETE /projects/{projectId}`
