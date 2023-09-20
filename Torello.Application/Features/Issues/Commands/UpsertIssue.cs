@@ -53,7 +53,7 @@ public sealed class UpsertIssueController : ApiController
         _mediator = mediator;
     }
 
-    [HttpPost("/lanes/{laneId:guid}/lanes", Name = nameof(CreateIssue))]
+    [HttpPost("/lanes/{laneId:guid}/issues", Name = nameof(CreateIssue))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IssueResponse), 201)]
     [ProducesResponseType(404)]
