@@ -1,5 +1,6 @@
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Lanes;
+using Torello.Domain.Users;
 
 namespace Torello.Domain.Issues;
 
@@ -45,6 +46,18 @@ public class Issue : Entity<IssueId>
             null
         );
     }
+
+    public void Update(
+        string title,
+        string description
+    )
+    {
+        Title = title;
+        Description = description;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    public UserId UserId => Lane.UserId;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public Issue(IssueId id) : base(id) { }

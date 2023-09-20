@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using ErrorOr;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
@@ -84,6 +85,19 @@ public sealed class UpsertLaneController : ApiController
             },
             errors => Problem(errors)
         );
+    }
+}
+
+public sealed class UpsertLaneValidator : AbstractValidator<UpsertLaneCommand>
+{
+    private const byte MinLaneTitleLength = 2;
+    private const byte MaxLaneTitleLength = 32;
+
+    public UpsertLaneValidator()
+    {
+        RuleFor(x => x.Title)
+            .MinimumLength(MinLaneTitleLength).WithMessage($"The lane title must be minimum {MinLaneTitleLength} characters long!")
+            .MaximumLength(MaxLaneTitleLength).WithMessage($"The lane title must be maximum {MaxLaneTitleLength} characters long!");
     }
 }
 

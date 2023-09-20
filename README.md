@@ -80,10 +80,10 @@ of what you are allowed to do no matter what.
 - [ ] Delete a Lane: `DELETE /lanes/{laneId}`
 
 ### Issues:
-- [ ] Create an Issue: `POST /lanes/{laneId}/issues`
-- [ ] Retrieve all Issues for a Lane: `GET /lanes/{laneId}/issues`
-- [ ] Retrieve an Issue: `GET /issues/{issueId}`
-- [ ] Update an Issue: `PUT /issues/{issueId}`
+- [x] Create an Issue: `POST /lanes/{laneId}/issues`
+- [x] Retrieve all Issues for a Lane: `GET /lanes/{laneId}/issues`
+- [x] Retrieve an Issue: `GET /issues/{issueId}`
+- [x] Update an Issue: `PUT /issues/{issueId}`
 - [ ] Delete an Issue: `DELETE /issues/{issueId}`
 
 ## TODO

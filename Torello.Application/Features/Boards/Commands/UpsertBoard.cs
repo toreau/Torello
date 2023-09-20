@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using ErrorOr;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Torello.Application.Common;
@@ -85,6 +86,19 @@ public sealed class UpsertBoardController : ApiController
             errors => Problem(errors)
         );
 
+    }
+}
+
+public sealed class UpsertBoardValidator : AbstractValidator<UpsertBoardCommand>
+{
+    private const byte MinBoardTitleLength = 2;
+    private const byte MaxBoardTitleLength = 32;
+
+    public UpsertBoardValidator()
+    {
+        RuleFor(x => x.Title)
+            .MinimumLength(MinBoardTitleLength).WithMessage($"The board title must be minimum {MinBoardTitleLength} characters long!")
+            .MaximumLength(MaxBoardTitleLength).WithMessage($"The board title must be maximum {MaxBoardTitleLength} characters long!");
     }
 }
 
