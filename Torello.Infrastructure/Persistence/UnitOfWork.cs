@@ -6,36 +6,21 @@ using static System.GC;
 
 namespace Torello.Infrastructure.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(TorelloDbContext dbContext, IPublisher publisher) : IUnitOfWork
 {
-    private readonly TorelloDbContext _dbContext;
-    private readonly IPublisher _publisher;
-
     private bool _isDisposed;
 
-    public IUserRepository Users { get; }
-    public IProjectRepository Projects { get; }
-    public IBoardRepository Boards { get; }
-    public ILaneRepository Lanes { get; }
-    public IIssueRepository Issues { get; }
-
-    public UnitOfWork(TorelloDbContext dbContext, IPublisher publisher)
-    {
-        _dbContext = dbContext;
-        _publisher = publisher;
-
-        Users = new UserRepository(dbContext);
-        Projects = new ProjectRepository(dbContext);
-        Boards = new BoardRepository(dbContext);
-        Lanes = new LaneRepository(dbContext);
-        Issues = new IssueRepository(dbContext);
-    }
+    public IUserRepository Users { get; } = new UserRepository(dbContext);
+    public IProjectRepository Projects { get; } = new ProjectRepository(dbContext);
+    public IBoardRepository Boards { get; } = new BoardRepository(dbContext);
+    public ILaneRepository Lanes { get; } = new LaneRepository(dbContext);
+    public IIssueRepository Issues { get; } = new IssueRepository(dbContext);
 
     public async Task<int> SaveChangesAsync()
     {
         await PublishDomainEvents();
 
-        return await _dbContext.SaveChangesAsync();
+        return await dbContext.SaveChangesAsync();
     }
 
     public void Dispose()
@@ -50,7 +35,7 @@ public class UnitOfWork : IUnitOfWork
             return;
 
         if (disposing)
-            _dbContext.Dispose();
+            dbContext.Dispose();
 
         _isDisposed = true;
     }
@@ -58,7 +43,7 @@ public class UnitOfWork : IUnitOfWork
     private async Task PublishDomainEvents()
     {
         // Create a list of all the entities that may have domain events
-        var entitiesWithDomainEvents = _dbContext.ChangeTracker
+        var entitiesWithDomainEvents = dbContext.ChangeTracker
             .Entries()
             .Where(entityEntry => entityEntry.Entity is IDomainEventProvider)
             .ToList();
@@ -75,7 +60,7 @@ public class UnitOfWork : IUnitOfWork
         Console.WriteLine($"** About to publish {domainEvents.Count} domain event(s)!");
 
         // Publish the domain events and await them
-        IEnumerable<Task> tasks = domainEvents.Select(domainEvent => _publisher.Publish(domainEvent));
+        IEnumerable<Task> tasks = domainEvents.Select(domainEvent => publisher.Publish(domainEvent));
 
         await Task.WhenAll(tasks);
     }
