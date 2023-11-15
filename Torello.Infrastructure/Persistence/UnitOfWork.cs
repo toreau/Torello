@@ -2,6 +2,7 @@ using MediatR;
 using Torello.Application.Common.Interfaces.Persistence;
 using Torello.Domain.Common.Primitives;
 using Torello.Infrastructure.Persistence.Repositories;
+using static System.GC;
 
 namespace Torello.Infrastructure.Persistence;
 
@@ -40,7 +41,7 @@ public class UnitOfWork : IUnitOfWork
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
+        SuppressFinalize(this);
     }
 
     private void Dispose(bool disposing)
