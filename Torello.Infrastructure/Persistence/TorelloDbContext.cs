@@ -11,11 +11,11 @@ namespace Torello.Infrastructure.Persistence;
 
 public class TorelloDbContext(DbContextOptions<TorelloDbContext> options) : DbContext(options)
 {
-    public DbSet<User>? Users { get; set; }
-    public DbSet<Project>? Projects { get; set; }
-    public DbSet<Board>? Boards { get; set; }
-    public DbSet<Lane>? Lanes { get; set; }
-    public DbSet<Issue>? Issues { get; set; }
+    public required DbSet<User> Users { get; set; }
+    public required DbSet<Project> Projects { get; set; }
+    public required DbSet<Board> Boards { get; set; }
+    public required DbSet<Lane> Lanes { get; set; }
+    public required DbSet<Issue> Issues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
