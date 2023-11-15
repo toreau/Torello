@@ -25,7 +25,7 @@ public class ApiController : ControllerBase
         return Problem(errors[0]);
     }
 
-    private IActionResult Problem(Error error)
+    private ObjectResult Problem(Error error)
     {
         var statusCode = error switch
         {
