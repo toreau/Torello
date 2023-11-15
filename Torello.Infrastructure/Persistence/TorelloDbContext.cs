@@ -9,12 +9,8 @@ using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Persistence;
 
-public class TorelloDbContext : DbContext
+public class TorelloDbContext(DbContextOptions<TorelloDbContext> options) : DbContext(options)
 {
-    public TorelloDbContext(DbContextOptions<TorelloDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<User>? Users { get; set; }
     public DbSet<Project>? Projects { get; set; }
     public DbSet<Board>? Boards { get; set; }
