@@ -15,11 +15,11 @@ public class TorelloDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Project> Projects { get; set; }
-    public DbSet<Board> Boards { get; set; }
-    public DbSet<Lane> Lanes { get; set; }
-    public DbSet<Issue> Issues { get; set; }
+    public DbSet<User>? Users { get; set; }
+    public DbSet<Project>? Projects { get; set; }
+    public DbSet<Board>? Boards { get; set; }
+    public DbSet<Lane>? Lanes { get; set; }
+    public DbSet<Issue>? Issues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
