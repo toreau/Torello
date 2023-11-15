@@ -9,14 +9,9 @@ using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Authentication;
 
-internal sealed class JwtTokenGenerator : IJwtTokenGenerator
+internal sealed class JwtTokenGenerator(IOptions<JwtSettings> jwtSettings) : IJwtTokenGenerator
 {
-    private readonly JwtSettings _jwtSettings;
-
-    public JwtTokenGenerator(IOptions<JwtSettings> jwtSettings)
-    {
-        _jwtSettings = jwtSettings.Value;
-    }
+    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     public string GenerateToken(User user, string? jti = null)
     {

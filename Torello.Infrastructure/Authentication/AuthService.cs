@@ -6,20 +6,11 @@ using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Authentication;
 
-public class AuthService : IAuthService
+public class AuthService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork) : IAuthService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public AuthService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _unitOfWork = unitOfWork;
-    }
-
     private UserId? GetCurrentUserId()
     {
-        HttpContext? httpContext = _httpContextAccessor.HttpContext;
+        HttpContext? httpContext = httpContextAccessor.HttpContext;
 
         if (httpContext?.User?.Identity?.IsAuthenticated != true)
             return null;
@@ -36,7 +27,7 @@ public class AuthService : IAuthService
     public async Task<User?> GetCurrentUserAsync()
     {
         return GetCurrentUserId() is { } userId
-            ? await _unitOfWork.Users.GetByIdAsync(userId)
+            ? await unitOfWork.Users.GetByIdAsync(userId)
             : null;
     }
 }

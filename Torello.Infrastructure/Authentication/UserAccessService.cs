@@ -4,18 +4,11 @@ using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Authentication;
 
-public sealed class UserAccessService : IUserAccessService
+public sealed class UserAccessService(IAuthService authService) : IUserAccessService
 {
-    private readonly IAuthService _authService;
-
-    public UserAccessService(IAuthService authService)
-    {
-        _authService = authService;
-    }
-
     public async Task<bool> CurrentUserCanAccess(Project project)
     {
-        return UserCanAccess(await _authService.GetCurrentUserAsync(), project);
+        return UserCanAccess(await authService.GetCurrentUserAsync(), project);
     }
 
     private bool UserCanAccess(User? user, Project project)
