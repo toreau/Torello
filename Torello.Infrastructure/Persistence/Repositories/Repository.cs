@@ -14,15 +14,31 @@ public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEnti
         _dbContext = dbContext;
     }
 
+    public virtual IEnumerable<TEntity> GetAll()
+    {
+        return _dbContext.Set<TEntity>().ToList();
+    }
+
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await _dbContext.Set<TEntity>().ToListAsync();
+    }
+
+    public virtual TEntity? GetById(TEntityId id)
+    {
+        return _dbContext.Set<TEntity>()
+            .SingleOrDefault(e => e.Id!.Equals(id));
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id)
     {
         return await _dbContext.Set<TEntity>()
             .SingleOrDefaultAsync(e => e.Id!.Equals(id));
+    }
+
+    public void Add(TEntity entity)
+    {
+        _dbContext.Set<TEntity>().Add(entity);
     }
 
     public async Task AddAsync(TEntity entity)
