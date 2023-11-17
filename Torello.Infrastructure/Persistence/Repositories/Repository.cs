@@ -4,15 +4,10 @@ using Torello.Domain.Common.Primitives;
 
 namespace Torello.Infrastructure.Persistence.Repositories;
 
-public abstract class Repository<TEntity, TEntityId>: IRepository<TEntity, TEntityId>
+public abstract class Repository<TEntity, TEntityId>(TorelloDbContext dbContext) : IRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
 {
-    protected readonly TorelloDbContext _dbContext;
-
-    protected Repository(TorelloDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    protected readonly TorelloDbContext _dbContext = dbContext;
 
     public virtual IEnumerable<TEntity> GetAll()
     {
