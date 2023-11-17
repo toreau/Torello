@@ -1,3 +1,5 @@
+using Torello.Domain.Common.Interfaces;
+
 namespace Torello.Domain.Common.Primitives;
 
 public abstract class Entity<TEntityId>(TEntityId id) : IDomainEventProvider

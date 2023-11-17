@@ -1,3 +1,4 @@
+using Torello.Domain.Common.Interfaces;
 using Torello.Domain.Common.Primitives;
 
 namespace Torello.Domain.Projects;
