@@ -14,27 +14,17 @@ public class Lane : Entity<LaneId>
     private readonly List<Issue> _issues = new List<Issue>();
     public virtual IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
 
-    private Lane(
-        LaneId id,
-        string title
-    ) : base(id)
+    private Lane(LaneId id, string title ) : base(id)
     {
         Title = title;
     }
 
-    public static Lane Create(
-        string title
-    )
+    public static Lane Create(string title)
     {
-        return new Lane(
-            LaneId.CreateUnique(),
-            title
-        );
+        return new Lane(LaneId.CreateUnique(), title);
     }
 
-    public void Update(
-        string title
-    )
+    public void Update(string title)
     {
         Title = title;
     }

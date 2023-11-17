@@ -15,29 +15,16 @@ public class Project : Entity<ProjectId>
     private readonly List<Board> _boards = new List<Board>();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
-    private Project(
-        ProjectId id,
-        string title,
-        string description,
-        DateTimeOffset createdAt
-    ) : base(id)
+    private Project(ProjectId id, string title, string description,DateTimeOffset createdAt) : base(id)
     {
         Title = title;
         Description = description;
         CreatedAt = createdAt;
     }
 
-    public static Project Create(
-        string title,
-        string description
-    )
+    public static Project Create(string title, string description)
     {
-        var project = new Project(
-            ProjectId.CreateUnique(),
-            title,
-            description,
-            DateTimeOffset.UtcNow
-        );
+        var project = new Project(ProjectId.CreateUnique(), title, description, DateTimeOffset.UtcNow);
 
         // Add default/example board
         project.AddBoard(Board.Create("Example board"));
@@ -47,10 +34,7 @@ public class Project : Entity<ProjectId>
         return project;
     }
 
-    public void Update(
-        string title,
-        string description
-    )
+    public void Update(string title, string description)
     {
         Title = title;
         Description = description;

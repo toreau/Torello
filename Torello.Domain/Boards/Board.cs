@@ -15,25 +15,15 @@ public class Board : Entity<BoardId>
     private readonly List<Lane> _lanes = new List<Lane>();
     public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 
-    private Board(
-        BoardId id,
-        string title,
-        DateTimeOffset createdAt
-    ) : base(id)
+    private Board(BoardId id, string title, DateTimeOffset createdAt) : base(id)
     {
         Title = title;
         CreatedAt = createdAt;
     }
 
-    public static Board Create(
-        string title
-    )
+    public static Board Create(string title)
     {
-        var board = new Board(
-            BoardId.CreateUnique(),
-            title,
-            DateTimeOffset.UtcNow
-        );
+        var board = new Board(BoardId.CreateUnique(), title, DateTimeOffset.UtcNow);
 
         // Add some default/example lanes
         foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
@@ -42,9 +32,7 @@ public class Board : Entity<BoardId>
         return board;
     }
 
-    public void Update(
-        string title
-    )
+    public void Update(string title)
     {
         Title = title;
     }
@@ -57,6 +45,8 @@ public class Board : Entity<BoardId>
     }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public Board(BoardId id) : base(id) { }
+    public Board(BoardId id) : base(id)
+    {
+    }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

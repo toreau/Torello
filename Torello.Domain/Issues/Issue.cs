@@ -15,14 +15,7 @@ public class Issue : Entity<IssueId>
     // Navigation
     public virtual Lane Lane { get; private set; } = null!;
 
-    private Issue(
-        IssueId id,
-        string title,
-        string description,
-        IssuePriority priority,
-        DateTimeOffset createdAt,
-        DateTimeOffset? updatedAt
-    ) : base(id)
+    private Issue(IssueId id, string title, string description, IssuePriority priority, DateTimeOffset createdAt, DateTimeOffset? updatedAt) : base(id)
     {
         Title = title;
         Description = description;
@@ -31,26 +24,12 @@ public class Issue : Entity<IssueId>
         UpdatedAt = updatedAt;
     }
 
-    public static Issue Create(
-        string title,
-        string description,
-        IssuePriority priority
-    )
+    public static Issue Create(string title, string description, IssuePriority priority)
     {
-        return new Issue(
-            IssueId.CreateUnique(),
-            title,
-            description,
-            priority,
-            DateTimeOffset.UtcNow,
-            null
-        );
+        return new Issue(IssueId.CreateUnique(), title, description, priority, DateTimeOffset.UtcNow, null);
     }
 
-    public void Update(
-        string title,
-        string description
-    )
+    public void Update(string title, string description)
     {
         Title = title;
         Description = description;
@@ -60,7 +39,9 @@ public class Issue : Entity<IssueId>
     public User User => Lane.User;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public Issue(IssueId id) : base(id) { }
+    public Issue(IssueId id) : base(id)
+    {
+    }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
 

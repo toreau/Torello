@@ -13,29 +13,16 @@ public class User : Entity<UserId>
     private readonly List<Project> _projects = new List<Project>();
     public virtual IReadOnlyList<Project> Projects => _projects.AsReadOnly();
 
-    private User(
-        UserId id,
-        string username,
-        string hashedPassword,
-        DateTimeOffset createdAt
-    ) : base(id)
+    private User(UserId id, string username, string hashedPassword, DateTimeOffset createdAt) : base(id)
     {
         Username = username;
         HashedPassword = hashedPassword;
         CreatedAt = createdAt;
     }
 
-    public static User Create(
-        string username,
-        string hashedPassword
-    )
+    public static User Create(string username, string hashedPassword)
     {
-        var user = new User(
-            UserId.CreateUnique(),
-            username,
-            hashedPassword,
-            DateTimeOffset.UtcNow
-        );
+        var user = new User(UserId.CreateUnique(), username, hashedPassword, DateTimeOffset.UtcNow);
 
         // Add default/example project
         user.AddProject(Project.Create(
