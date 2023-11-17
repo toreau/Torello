@@ -20,7 +20,7 @@ public sealed record UpsertIssueRequest(
 )
 {
     public UpsertIssueCommand ToCommand(IssueId? issueId)
-        => new UpsertIssueCommand(
+        => new(
             Title,
             Description,
             issueId,
@@ -28,7 +28,7 @@ public sealed record UpsertIssueRequest(
         );
 
     public UpsertIssueCommand ToCommand(LaneId? laneId)
-        => new UpsertIssueCommand(
+        => new(
             Title,
             Description,
             null,
@@ -44,15 +44,8 @@ public sealed record UpsertIssueCommand(
 ) : IRequest<ErrorOr<IssueResult>>;
 
 [ApiExplorerSettings(GroupName = "Issues")]
-public sealed class UpsertIssueController : ApiController
+public sealed class UpsertIssueController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public UpsertIssueController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("/lanes/{laneId:guid}/issues", Name = nameof(CreateIssue))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IssueResponse), 201)]
@@ -73,7 +66,7 @@ public sealed class UpsertIssueController : ApiController
 
     private async Task<IActionResult> UpsertIssue(UpsertIssueCommand upsertIssueCommand)
     {
-        var upsertIssueResult = await _mediator.Send(upsertIssueCommand);
+        var upsertIssueResult = await mediator.Send(upsertIssueCommand);
 
         return upsertIssueResult.Match(
             result =>
@@ -105,23 +98,14 @@ public sealed class UpsertIssueValidator : AbstractValidator<UpsertIssueCommand>
     }
 }
 
-internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, ErrorOr<IssueResult>>
+internal sealed class UpsertIssueHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertIssueCommand, ErrorOr<IssueResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public UpsertIssueHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<IssueResult>> Handle(
         UpsertIssueCommand upsertIssueCommand,
         CancellationToken cancellationToken
     )
     {
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
         Issue? issue;
@@ -130,7 +114,7 @@ internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, E
         if (upsertIssueCommand.IssueId is not null)
         {
             // Does the issue exist?
-            issue = await _unitOfWork.Issues.GetByIdAsync(upsertIssueCommand.IssueId);
+            issue = await unitOfWork.Issues.GetByIdAsync(upsertIssueCommand.IssueId);
             if (issue is null)
                 return Errors.Issues.NotFound;
 
@@ -147,7 +131,7 @@ internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, E
         else
         {
             // Does the lane exist?
-            if (await _unitOfWork.Lanes.GetByIdAsync(upsertIssueCommand.LaneId!) is not { } lane)
+            if (await unitOfWork.Lanes.GetByIdAsync(upsertIssueCommand.LaneId!) is not { } lane)
                 return Errors.Lanes.NotFound;
 
             issue = Issue.Create(
@@ -159,7 +143,7 @@ internal sealed class UpsertIssueHandler : IRequestHandler<UpsertIssueCommand, E
             lane.AddIssue(issue);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         return new IssueResult(issue);
     }

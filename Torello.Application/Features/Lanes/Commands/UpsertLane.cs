@@ -19,14 +19,14 @@ public sealed record UpsertLaneRequest(
 )
 {
     public UpsertLaneCommand ToCommand(LaneId? laneId)
-        => new UpsertLaneCommand(
+        => new(
             Title,
             laneId,
             null
         );
 
     public UpsertLaneCommand ToCommand(BoardId? boardId)
-        => new UpsertLaneCommand(
+        => new(
             Title,
             null,
             boardId
@@ -40,15 +40,8 @@ public sealed record UpsertLaneCommand(
 ) : IRequest<ErrorOr<LaneResult>>;
 
 [ApiExplorerSettings(GroupName = "Lanes")]
-public sealed class UpsertLaneController : ApiController
+public sealed class UpsertLaneController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public UpsertLaneController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("/boards/{boardId:guid}/lanes", Name = nameof(CreateLane))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(LaneResponse), 201)]
@@ -69,7 +62,7 @@ public sealed class UpsertLaneController : ApiController
 
     private async Task<IActionResult> UpsertLane(UpsertLaneCommand upsertLaneCommand)
     {
-        var upsertLaneResult = await _mediator.Send(upsertLaneCommand);
+        var upsertLaneResult = await mediator.Send(upsertLaneCommand);
 
         return upsertLaneResult.Match(
             result =>
@@ -101,23 +94,14 @@ public sealed class UpsertLaneValidator : AbstractValidator<UpsertLaneCommand>
     }
 }
 
-internal sealed class UpsertLaneHandler : IRequestHandler<UpsertLaneCommand, ErrorOr<LaneResult>>
+internal sealed class UpsertLaneHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertLaneCommand, ErrorOr<LaneResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public UpsertLaneHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<LaneResult>> Handle(
         UpsertLaneCommand upsertLaneCommand,
         CancellationToken cancellationToken
     )
     {
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
         Lane? lane;
@@ -126,7 +110,7 @@ internal sealed class UpsertLaneHandler : IRequestHandler<UpsertLaneCommand, Err
         if (upsertLaneCommand.LaneId is not null)
         {
             // Does the lane exist?
-            lane = await _unitOfWork.Lanes.GetByIdAsync(upsertLaneCommand.LaneId);
+            lane = await unitOfWork.Lanes.GetByIdAsync(upsertLaneCommand.LaneId);
             if (lane is null)
                 return Errors.Lanes.NotFound;
 
@@ -139,7 +123,7 @@ internal sealed class UpsertLaneHandler : IRequestHandler<UpsertLaneCommand, Err
         else
         {
             // Does the board exist?
-            if (await _unitOfWork.Boards.GetByIdAsync(upsertLaneCommand.BoardId!) is not { } board)
+            if (await unitOfWork.Boards.GetByIdAsync(upsertLaneCommand.BoardId!) is not { } board)
                 return Errors.Boards.NotFound;
 
             lane = Lane.Create(upsertLaneCommand.Title);
@@ -147,7 +131,7 @@ internal sealed class UpsertLaneHandler : IRequestHandler<UpsertLaneCommand, Err
             board.AddLane(lane);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         return new LaneResult(lane);
     }

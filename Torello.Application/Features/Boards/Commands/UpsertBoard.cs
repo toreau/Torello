@@ -19,14 +19,14 @@ public sealed record UpsertBoardRequest(
 )
 {
     public UpsertBoardCommand ToCommand(BoardId? boardId)
-        => new UpsertBoardCommand(
+        => new(
             Title,
             boardId,
             null
         );
 
     public UpsertBoardCommand ToCommand(ProjectId? projectId)
-        => new UpsertBoardCommand(
+        => new(
             Title,
             null,
             projectId
@@ -40,15 +40,8 @@ public sealed record UpsertBoardCommand(
 ) : IRequest<ErrorOr<BoardResult>>;
 
 [ApiExplorerSettings(GroupName = "Boards")]
-public sealed class UpsertBoardController : ApiController
+public sealed class UpsertBoardController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public UpsertBoardController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("/projects/{projectId:guid}/boards", Name = nameof(CreateBoard))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardResponse), 201)]
@@ -69,7 +62,7 @@ public sealed class UpsertBoardController : ApiController
 
     private async Task<IActionResult> UpsertBoard(UpsertBoardCommand upsertBoardCommand)
     {
-        var upsertBoardResult = await _mediator.Send(upsertBoardCommand);
+        var upsertBoardResult = await mediator.Send(upsertBoardCommand);
 
         return upsertBoardResult.Match(
             result =>
@@ -102,23 +95,14 @@ public sealed class UpsertBoardValidator : AbstractValidator<UpsertBoardCommand>
     }
 }
 
-internal sealed class UpsertBoardHandler : IRequestHandler<UpsertBoardCommand, ErrorOr<BoardResult>>
+internal sealed class UpsertBoardHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertBoardCommand, ErrorOr<BoardResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public UpsertBoardHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<BoardResult>> Handle(
         UpsertBoardCommand upsertBoardCommand,
         CancellationToken cancellationToken
     )
     {
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
         Board? board;
@@ -127,7 +111,7 @@ internal sealed class UpsertBoardHandler : IRequestHandler<UpsertBoardCommand, E
         if (upsertBoardCommand.BoardId is not null)
         {
             // Does the board exist?
-            board = await _unitOfWork.Boards.GetByIdAsync(upsertBoardCommand.BoardId);
+            board = await unitOfWork.Boards.GetByIdAsync(upsertBoardCommand.BoardId);
             if (board is null)
                 return Errors.Boards.NotFound;
 
@@ -141,7 +125,7 @@ internal sealed class UpsertBoardHandler : IRequestHandler<UpsertBoardCommand, E
         else
         {
             // Does the project exist?
-            if (await _unitOfWork.Projects.GetByIdAsync(upsertBoardCommand.ProjectId!) is not { } project)
+            if (await unitOfWork.Projects.GetByIdAsync(upsertBoardCommand.ProjectId!) is not { } project)
                 return Errors.Projects.NotFound;
 
             board = Board.Create(upsertBoardCommand.Title);
@@ -149,7 +133,7 @@ internal sealed class UpsertBoardHandler : IRequestHandler<UpsertBoardCommand, E
             project.AddBoard(board);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         return new BoardResult(board);
     }

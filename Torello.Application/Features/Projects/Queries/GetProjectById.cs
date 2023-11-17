@@ -16,15 +16,8 @@ public sealed record GetProjectByIdQuery(
 ) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
-public sealed class GetProjectByIdController : ApiController
+public sealed class GetProjectByIdController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetProjectByIdController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/projects/{projectId:guid}", Name = nameof(GetProjectById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ProjectResponse), 200)]
@@ -32,7 +25,7 @@ public sealed class GetProjectByIdController : ApiController
     public async Task<IActionResult> GetProjectById(Guid projectId)
     {
         var getProjectByIdQuery = new GetProjectByIdQuery(projectId);
-        var getProjectByIdResult = await _mediator.Send(getProjectByIdQuery);
+        var getProjectByIdResult = await mediator.Send(getProjectByIdQuery);
 
         return getProjectByIdResult.Match(
             result => Ok(result.ToResponse()),
@@ -41,17 +34,11 @@ public sealed class GetProjectByIdController : ApiController
     }
 }
 
-internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
+internal sealed class GetProjectByIdHandler(
+        IUnitOfWork unitOfWork,
+        IAuthService authService)
+    : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public GetProjectByIdHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<ProjectResult>> Handle(
         GetProjectByIdQuery getProjectByIdQuery,
         CancellationToken cancellationToken
@@ -60,10 +47,10 @@ internal sealed class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuer
         if (ProjectId.Create(getProjectByIdQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;
 
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        if (await _unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
+        if (await unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
 
         if (project.User.Id != user.Id)

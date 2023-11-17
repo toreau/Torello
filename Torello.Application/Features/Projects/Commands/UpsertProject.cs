@@ -19,7 +19,7 @@ public sealed record UpsertProjectRequest(
 )
 {
     public UpsertProjectCommand ToCommand(ProjectId? projectId = null)
-        => new UpsertProjectCommand(
+        => new(
             Title,
             Description,
             projectId
@@ -33,15 +33,8 @@ public sealed record UpsertProjectCommand(
 ) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
-public sealed class UpsertProjectController : ApiController
+public sealed class UpsertProjectController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public UpsertProjectController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("/projects", Name = nameof(CreateProject))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ProjectResponse), 201)]
@@ -61,7 +54,7 @@ public sealed class UpsertProjectController : ApiController
 
     private async Task<IActionResult> UpsertProject(UpsertProjectCommand upsertProjectCommand)
     {
-        var upsertProjectResult = await _mediator.Send(upsertProjectCommand);
+        var upsertProjectResult = await mediator.Send(upsertProjectCommand);
 
         return upsertProjectResult.Match(
             result =>
@@ -93,29 +86,18 @@ public sealed class UpsertProjectValidator : AbstractValidator<UpsertProjectComm
     }
 }
 
-internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
-{
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-    private readonly IUserAccessService _userAccessService;
-
-    public UpsertProjectHandler(
+internal sealed class UpsertProjectHandler(
         IUnitOfWork unitOfWork,
         IAuthService authService,
-        IUserAccessService userAccessService
-    )
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-        _userAccessService = userAccessService;
-    }
-
+        IUserAccessService userAccessService)
+    : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
+{
     public async Task<ErrorOr<ProjectResult>> Handle(
         UpsertProjectCommand upsertProjectCommand,
         CancellationToken cancellationToken
     )
     {
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
         Project? project;
@@ -124,12 +106,12 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         if (upsertProjectCommand.ProjectId is not null)
         {
             // Does the project exist?
-            project = await _unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.ProjectId);
+            project = await unitOfWork.Projects.GetByIdAsync(upsertProjectCommand.ProjectId);
             if (project is null)
                 return Errors.Projects.NotFound;
 
             // Can the currently logged in user access it?
-            if (!await _userAccessService.CurrentUserCanAccess(project))
+            if (!await userAccessService.CurrentUserCanAccess(project))
                 return Errors.Users.InvalidCredentials;
 
             project.Update(
@@ -149,7 +131,7 @@ internal sealed class UpsertProjectHandler : IRequestHandler<UpsertProjectComman
         }
 
         // Save and return the updated/created result
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         return new ProjectResult(project);
     }

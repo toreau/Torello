@@ -17,15 +17,8 @@ public sealed record GetUserByIdQuery(
 
 [ApiExplorerSettings(GroupName = "Users")]
 [AllowAnonymous]
-public sealed class GetUserByIdController : ApiController
+public sealed class GetUserByIdController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetUserByIdController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/users/{userId:guid}", Name = nameof(GetUserById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(UserResponse), 200)]
@@ -33,7 +26,7 @@ public sealed class GetUserByIdController : ApiController
     public async Task<IActionResult> GetUserById(Guid userId)
     {
         var getUserByIdQuery = new GetUserByIdQuery(userId);
-        var getUserByIdResult = await _mediator.Send(getUserByIdQuery);
+        var getUserByIdResult = await mediator.Send(getUserByIdQuery);
 
         return getUserByIdResult.Match(
             result => Ok(result.ToResponse()),
@@ -42,15 +35,8 @@ public sealed class GetUserByIdController : ApiController
     }
 }
 
-internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, ErrorOr<UserResult>>
+internal sealed class GetUserByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserByIdQuery, ErrorOr<UserResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public GetUserByIdHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task<ErrorOr<UserResult>> Handle(
         GetUserByIdQuery getUserByIdQuery,
         CancellationToken cancellationToken
@@ -59,7 +45,7 @@ internal sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Err
         if (UserId.Create(getUserByIdQuery.Id) is not { } userId)
             return Errors.EntityId.Invalid;
 
-        if (await _unitOfWork.Users.GetByIdAsync(userId) is not { } user)
+        if (await unitOfWork.Users.GetByIdAsync(userId) is not { } user)
             return Errors.Users.NotFound;
 
         return new UserResult(user);

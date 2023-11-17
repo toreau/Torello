@@ -16,15 +16,8 @@ public sealed record GetLaneByIdQuery(
 ) : IRequest<ErrorOr<LaneResult>>;
 
 [ApiExplorerSettings(GroupName = "Lanes")]
-public sealed class GetLaneByIdController : ApiController
+public sealed class GetLaneByIdController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetLaneByIdController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/lanes/{laneId:guid}", Name = nameof(GetLaneById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(LaneResponse), 200)]
@@ -32,7 +25,7 @@ public sealed class GetLaneByIdController : ApiController
     public async Task<IActionResult> GetLaneById(Guid laneId)
     {
         var getLaneByIdQuery = new GetLaneByIdQuery(laneId);
-        var laneResult = await _mediator.Send(getLaneByIdQuery);
+        var laneResult = await mediator.Send(getLaneByIdQuery);
 
         return laneResult.Match(
             result => Ok(result.ToResponse()),
@@ -41,17 +34,8 @@ public sealed class GetLaneByIdController : ApiController
     }
 }
 
-internal sealed class GetLaneByIdHandler : IRequestHandler<GetLaneByIdQuery, ErrorOr<LaneResult>>
+internal sealed class GetLaneByIdHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetLaneByIdQuery, ErrorOr<LaneResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public GetLaneByIdHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<LaneResult>> Handle(
         GetLaneByIdQuery getLaneByIdQuery,
         CancellationToken cancellationToken)
@@ -59,10 +43,10 @@ internal sealed class GetLaneByIdHandler : IRequestHandler<GetLaneByIdQuery, Err
         if (LaneId.Create(getLaneByIdQuery.Id) is not { } laneId)
             return Errors.EntityId.Invalid;
 
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        if (await _unitOfWork.Lanes.GetByIdAsync(laneId) is not { } lane)
+        if (await unitOfWork.Lanes.GetByIdAsync(laneId) is not { } lane)
             return Errors.Lanes.NotFound;
 
         if (lane.User.Id != user.Id)

@@ -16,15 +16,8 @@ internal sealed record GetAllLanesQuery(
 ) : IRequest<ErrorOr<LanesResult>>;
 
 [ApiExplorerSettings(GroupName = "Lanes")]
-public class GetAllLanesController : ApiController
+public class GetAllLanesController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetAllLanesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/boards/{boardId:guid}/lanes")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardsResponse), 200)]
@@ -32,7 +25,7 @@ public class GetAllLanesController : ApiController
     public async Task<IActionResult> GetAllLanes(Guid boardId)
     {
         var getAllLanesQuery = new GetAllLanesQuery(boardId);
-        var lanesResult = await _mediator.Send(getAllLanesQuery);
+        var lanesResult = await mediator.Send(getAllLanesQuery);
 
         return lanesResult.Match(
             result => Ok(result.ToResponse()),
@@ -41,17 +34,8 @@ public class GetAllLanesController : ApiController
     }
 }
 
-internal sealed class GetAllLanesHandler : IRequestHandler<GetAllLanesQuery, ErrorOr<LanesResult>>
+internal sealed class GetAllLanesHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetAllLanesQuery, ErrorOr<LanesResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public GetAllLanesHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<LanesResult>> Handle(
         GetAllLanesQuery getAllLanesQuery,
         CancellationToken cancellationToken
@@ -60,10 +44,10 @@ internal sealed class GetAllLanesHandler : IRequestHandler<GetAllLanesQuery, Err
         if (BoardId.Create(getAllLanesQuery.BoardId) is not { } boardId)
             return Errors.EntityId.Invalid;
 
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        if (await _unitOfWork.Boards.GetByIdAsync(boardId) is not { } board)
+        if (await unitOfWork.Boards.GetByIdAsync(boardId) is not { } board)
             return Errors.Boards.NotFound;
 
         if (board.User.Id != user.Id)

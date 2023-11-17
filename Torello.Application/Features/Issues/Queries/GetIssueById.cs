@@ -16,15 +16,8 @@ public sealed record GetIssueByIdQuery(
 ) : IRequest<ErrorOr<IssueResult>>;
 
 [ApiExplorerSettings(GroupName = "Issues")]
-public sealed class GetIssueByIdController : ApiController
+public sealed class GetIssueByIdController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetIssueByIdController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/issues/{issueId:guid}", Name = nameof(GetIssueById))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(LaneResponse), 200)]
@@ -32,7 +25,7 @@ public sealed class GetIssueByIdController : ApiController
     public async Task<IActionResult> GetIssueById(Guid issueId)
     {
         var getIssueByIdQuery = new GetIssueByIdQuery(issueId);
-        var issueResult = await _mediator.Send(getIssueByIdQuery);
+        var issueResult = await mediator.Send(getIssueByIdQuery);
 
         return issueResult.Match(
             result => Ok(result.ToResponse()),
@@ -41,17 +34,8 @@ public sealed class GetIssueByIdController : ApiController
     }
 }
 
-internal sealed class GetIssueByIdHandler : IRequestHandler<GetIssueByIdQuery, ErrorOr<IssueResult>>
+internal sealed class GetIssueByIdHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetIssueByIdQuery, ErrorOr<IssueResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public GetIssueByIdHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<IssueResult>> Handle(
         GetIssueByIdQuery getIssueByIdQuery,
         CancellationToken cancellationToken
@@ -60,10 +44,10 @@ internal sealed class GetIssueByIdHandler : IRequestHandler<GetIssueByIdQuery, E
         if (IssueId.Create(getIssueByIdQuery.Id) is not { } issueId)
             return Errors.EntityId.Invalid;
 
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        if (await _unitOfWork.Issues.GetByIdAsync(issueId) is not { } issue)
+        if (await unitOfWork.Issues.GetByIdAsync(issueId) is not { } issue)
             return Errors.Issues.NotFound;
 
         if (issue.User.Id != user.Id)

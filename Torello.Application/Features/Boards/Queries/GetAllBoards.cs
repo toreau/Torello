@@ -16,15 +16,8 @@ internal sealed record GetAllBoardsQuery(
 ) : IRequest<ErrorOr<BoardsResult>>;
 
 [ApiExplorerSettings(GroupName = "Boards")]
-public sealed class GetAllBoardsController : ApiController
+public sealed class GetAllBoardsController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public GetAllBoardsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("/projects/{projectId:guid}/boards")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(BoardsResponse), 200)]
@@ -32,7 +25,7 @@ public sealed class GetAllBoardsController : ApiController
     public async Task<IActionResult> GetAllBoards(Guid projectId)
     {
         var getAllBoardsQuery = new GetAllBoardsQuery(projectId);
-        var boardsResult = await _mediator.Send(getAllBoardsQuery);
+        var boardsResult = await mediator.Send(getAllBoardsQuery);
 
         return boardsResult.Match(
             result => Ok(result.ToResponse()),
@@ -41,17 +34,8 @@ public sealed class GetAllBoardsController : ApiController
     }
 }
 
-internal sealed class GetAllBoardsHandler : IRequestHandler<GetAllBoardsQuery, ErrorOr<BoardsResult>>
+internal sealed class GetAllBoardsHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetAllBoardsQuery, ErrorOr<BoardsResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
-
-    public GetAllBoardsHandler(IUnitOfWork unitOfWork, IAuthService authService)
-    {
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-    }
-
     public async Task<ErrorOr<BoardsResult>> Handle(
         GetAllBoardsQuery getAllBoardsQuery,
         CancellationToken cancellationToken
@@ -60,10 +44,10 @@ internal sealed class GetAllBoardsHandler : IRequestHandler<GetAllBoardsQuery, E
         if (ProjectId.Create(getAllBoardsQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;
 
-        if (await _authService.GetCurrentUserAsync() is not { } user)
+        if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        if (await _unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
+        if (await unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
 
         if (project.User.Id != user.Id)

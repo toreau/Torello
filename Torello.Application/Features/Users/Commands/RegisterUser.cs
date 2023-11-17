@@ -20,7 +20,7 @@ public sealed record RegisterUserRequest(
 )
 {
     public RegisterUserCommand ToCommand()
-        => new RegisterUserCommand(
+        => new(
             Username,
             Password
         );
@@ -33,15 +33,8 @@ public sealed record RegisterUserCommand(
 
 [ApiExplorerSettings(GroupName = "Users")]
 [AllowAnonymous]
-public sealed class RegisterUserController : ApiController
+public sealed class RegisterUserController(ISender mediator) : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public RegisterUserController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("/users", Name = nameof(RegisterUser))]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(UserResponse), 201)]
@@ -49,7 +42,7 @@ public sealed class RegisterUserController : ApiController
     public async Task<IActionResult> RegisterUser(RegisterUserRequest registerUserRequest)
     {
         var registerUserCommand = registerUserRequest.ToCommand();
-        var registerUserResult = await _mediator.Send(registerUserCommand);
+        var registerUserResult = await mediator.Send(registerUserCommand);
 
         return registerUserResult.Match(
             result => CreatedAtRoute(
@@ -80,36 +73,30 @@ public sealed class RegisterUserValidator : AbstractValidator<RegisterUserComman
     }
 }
 
-internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, ErrorOr<UserResult>>
+internal sealed class RegisterUserHandler(
+        IUnitOfWork unitOfWork,
+        IPasswordHasher passwordHasher)
+    : IRequestHandler<RegisterUserCommand, ErrorOr<UserResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IPasswordHasher _passwordHasher;
-
-    public RegisterUserHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
-    {
-        _unitOfWork = unitOfWork;
-        _passwordHasher = passwordHasher;
-    }
-
     public async Task<ErrorOr<UserResult>> Handle(
         RegisterUserCommand registerUserCommand,
         CancellationToken cancellationToken
     )
     {
         // Username already exists?
-        var user = await _unitOfWork.Users.GetByUsernameAsync(registerUserCommand.Username);
+        var user = await unitOfWork.Users.GetByUsernameAsync(registerUserCommand.Username);
         if (user is not null)
             return Errors.Users.UsernameAlreadyExists;
 
         // Create a new user
         user = User.Create(
             registerUserCommand.Username,
-            _passwordHasher.HashPassword(registerUserCommand.Password)
+            passwordHasher.HashPassword(registerUserCommand.Password)
         );
 
         // Add and save
-        await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.Users.AddAsync(user);
+        await unitOfWork.SaveChangesAsync();
 
         return new UserResult(user);
     }
