@@ -5,14 +5,7 @@ namespace Torello.Application.Features.Projects.EventHandlers;
 
 internal sealed class ProjectCreatedDomainEventHandler : IDomainEventHandler<ProjectCreatedDomainEvent>
 {
-    public ProjectCreatedDomainEventHandler()
-    {
-    }
-
-    public async Task Handle(
-        ProjectCreatedDomainEvent notification,
-        CancellationToken cancellationToken
-    )
+    public async Task Handle(ProjectCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
 
