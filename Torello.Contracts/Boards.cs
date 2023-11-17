@@ -3,33 +3,17 @@ using Torello.Domain.Boards;
 namespace Torello.Contracts;
 
 // Single
-public sealed record BoardResult(
-    Board Board
-)
+public sealed record BoardResult(Board Board)
 {
-    public BoardResponse ToResponse()
-        => new BoardResponse(
-            Board.Id.Value,
-            Board.Title,
-            Board.CreatedAt
-        );
+    public BoardResponse ToResponse() => new(Board.Id.Value, Board.Title, Board.CreatedAt);
 }
 
-public sealed record BoardResponse(
-    Guid Id,
-    string Title,
-    DateTimeOffset CreatedAt
-);
+public sealed record BoardResponse(Guid Id, string Title, DateTimeOffset CreatedAt);
 
 // Multiple
-public sealed record BoardsResult(
-    IEnumerable<Board> Boards
-)
+public sealed record BoardsResult(IEnumerable<Board> Boards)
 {
-    public BoardsResponse ToResponse()
-        => new BoardsResponse(Boards.Select(board => new BoardResult(board).ToResponse()));
+    public BoardsResponse ToResponse() => new(Boards.Select(board => new BoardResult(board).ToResponse()));
 }
 
-public sealed record BoardsResponse(
-    IEnumerable<BoardResponse> Boards
-);
+public sealed record BoardsResponse(IEnumerable<BoardResponse> Boards);
