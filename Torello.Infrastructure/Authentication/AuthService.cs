@@ -12,7 +12,7 @@ public class AuthService(IHttpContextAccessor httpContextAccessor, IUnitOfWork u
     {
         HttpContext? httpContext = httpContextAccessor.HttpContext;
 
-        if (httpContext?.User?.Identity?.IsAuthenticated != true)
+        if (httpContext?.User.Identity?.IsAuthenticated != true)
             return null;
 
         var userIdStr = httpContext.User.Claims
