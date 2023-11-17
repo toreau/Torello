@@ -59,7 +59,7 @@ public sealed class UpsertLaneController(ISender mediator) : ApiController
                         response)
                     : Ok(response);
             },
-            errors => Problem(errors)
+            Problem
         );
     }
 }

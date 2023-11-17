@@ -27,7 +27,7 @@ public sealed class GetLaneByIdController(ISender mediator) : ApiController
 
         return laneResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

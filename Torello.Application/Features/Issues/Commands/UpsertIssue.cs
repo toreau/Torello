@@ -59,7 +59,7 @@ public sealed class UpsertIssueController(ISender mediator) : ApiController
                         response)
                     : Ok(response);
             },
-            errors => Problem(errors)
+            Problem
         );
     }
 }

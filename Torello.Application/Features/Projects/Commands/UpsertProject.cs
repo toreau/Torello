@@ -56,7 +56,7 @@ public sealed class UpsertProjectController(ISender mediator) : ApiController
                         response)
                     : Ok(response);
             },
-            errors => Problem(errors)
+            Problem
         );
     }
 }

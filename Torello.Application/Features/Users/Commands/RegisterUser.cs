@@ -39,7 +39,7 @@ public sealed class RegisterUserController(ISender mediator) : ApiController
                 nameof(GetUserByIdController.GetUserById),
                 new { userId = result.ToResponse().Id },
                 result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

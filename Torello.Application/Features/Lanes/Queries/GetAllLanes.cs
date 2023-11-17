@@ -27,7 +27,7 @@ public class GetAllLanesController(ISender mediator) : ApiController
 
         return lanesResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

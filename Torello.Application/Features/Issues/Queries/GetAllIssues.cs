@@ -27,7 +27,7 @@ public class GetAllIssuesController(ISender mediator) : ApiController
 
         return issuesResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

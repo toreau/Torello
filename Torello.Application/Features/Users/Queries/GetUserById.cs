@@ -28,7 +28,7 @@ public sealed class GetUserByIdController(ISender mediator) : ApiController
 
         return getUserByIdResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

@@ -27,7 +27,7 @@ public sealed class GetAllBoardsController(ISender mediator) : ApiController
 
         return boardsResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

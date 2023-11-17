@@ -24,7 +24,7 @@ public sealed class GetAllProjectsController(ISender mediator) : ApiController
 
         return projectsResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

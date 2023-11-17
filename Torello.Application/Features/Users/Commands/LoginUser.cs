@@ -34,7 +34,7 @@ public sealed class LoginUserController(ISender mediator) : ApiController
 
         return loginUserResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }

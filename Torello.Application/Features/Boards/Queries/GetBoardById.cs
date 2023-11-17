@@ -27,7 +27,7 @@ public sealed class GetBoardByIdController(ISender mediator) : ApiController
 
         return boardResult.Match(
             result => Ok(result.ToResponse()),
-            errors => Problem(errors)
+            Problem
         );
     }
 }
