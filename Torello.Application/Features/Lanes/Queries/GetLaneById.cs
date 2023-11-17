@@ -11,9 +11,7 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Application.Features.Lanes.Queries;
 
-public sealed record GetLaneByIdQuery(
-    Guid Id
-) : IRequest<ErrorOr<LaneResult>>;
+public sealed record GetLaneByIdQuery(Guid Id) : IRequest<ErrorOr<LaneResult>>;
 
 [ApiExplorerSettings(GroupName = "Lanes")]
 public sealed class GetLaneByIdController(ISender mediator) : ApiController
@@ -36,9 +34,7 @@ public sealed class GetLaneByIdController(ISender mediator) : ApiController
 
 internal sealed class GetLaneByIdHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetLaneByIdQuery, ErrorOr<LaneResult>>
 {
-    public async Task<ErrorOr<LaneResult>> Handle(
-        GetLaneByIdQuery getLaneByIdQuery,
-        CancellationToken cancellationToken)
+    public async Task<ErrorOr<LaneResult>> Handle(GetLaneByIdQuery getLaneByIdQuery, CancellationToken cancellationToken)
     {
         if (LaneId.Create(getLaneByIdQuery.Id) is not { } laneId)
             return Errors.EntityId.Invalid;

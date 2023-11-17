@@ -11,9 +11,7 @@ using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Queries;
 
-public sealed record GetProjectByIdQuery(
-    Guid ProjectId
-) : IRequest<ErrorOr<ProjectResult>>;
+public sealed record GetProjectByIdQuery(Guid ProjectId) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
 public sealed class GetProjectByIdController(ISender mediator) : ApiController
@@ -35,14 +33,10 @@ public sealed class GetProjectByIdController(ISender mediator) : ApiController
 }
 
 internal sealed class GetProjectByIdHandler(
-        IUnitOfWork unitOfWork,
-        IAuthService authService)
-    : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
+    IUnitOfWork unitOfWork,
+    IAuthService authService) : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
 {
-    public async Task<ErrorOr<ProjectResult>> Handle(
-        GetProjectByIdQuery getProjectByIdQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<ProjectResult>> Handle(GetProjectByIdQuery getProjectByIdQuery, CancellationToken cancellationToken)
     {
         if (ProjectId.Create(getProjectByIdQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;

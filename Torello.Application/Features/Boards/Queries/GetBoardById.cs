@@ -11,9 +11,7 @@ using Torello.Domain.Common.Errors;
 
 namespace Torello.Application.Features.Boards.Queries;
 
-public sealed record GetBoardByIdQuery(
-    Guid Id
-) : IRequest<ErrorOr<BoardResult>>;
+public sealed record GetBoardByIdQuery(Guid Id) : IRequest<ErrorOr<BoardResult>>;
 
 [ApiExplorerSettings(GroupName = "Boards")]
 public sealed class GetBoardByIdController(ISender mediator) : ApiController
@@ -36,10 +34,7 @@ public sealed class GetBoardByIdController(ISender mediator) : ApiController
 
 internal sealed class GetBoardByIdHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetBoardByIdQuery, ErrorOr<BoardResult>>
 {
-    public async Task<ErrorOr<BoardResult>> Handle(
-        GetBoardByIdQuery getBoardByIdQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<BoardResult>> Handle(GetBoardByIdQuery getBoardByIdQuery, CancellationToken cancellationToken)
     {
         if (BoardId.Create(getBoardByIdQuery.Id) is not { } boardId)
             return Errors.EntityId.Invalid;

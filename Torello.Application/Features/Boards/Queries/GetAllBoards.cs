@@ -11,9 +11,7 @@ using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Boards.Queries;
 
-internal sealed record GetAllBoardsQuery(
-    Guid ProjectId
-) : IRequest<ErrorOr<BoardsResult>>;
+internal sealed record GetAllBoardsQuery(Guid ProjectId) : IRequest<ErrorOr<BoardsResult>>;
 
 [ApiExplorerSettings(GroupName = "Boards")]
 public sealed class GetAllBoardsController(ISender mediator) : ApiController
@@ -36,10 +34,7 @@ public sealed class GetAllBoardsController(ISender mediator) : ApiController
 
 internal sealed class GetAllBoardsHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetAllBoardsQuery, ErrorOr<BoardsResult>>
 {
-    public async Task<ErrorOr<BoardsResult>> Handle(
-        GetAllBoardsQuery getAllBoardsQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<BoardsResult>> Handle(GetAllBoardsQuery getAllBoardsQuery, CancellationToken cancellationToken)
     {
         if (ProjectId.Create(getAllBoardsQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;

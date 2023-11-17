@@ -11,9 +11,7 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Application.Features.Issues.Queries;
 
-internal sealed record GetAllIssuesQuery(
-    Guid LaneId
-) : IRequest<ErrorOr<IssuesResult>>;
+internal sealed record GetAllIssuesQuery(Guid LaneId) : IRequest<ErrorOr<IssuesResult>>;
 
 [ApiExplorerSettings(GroupName = "Issues")]
 public class GetAllIssuesController(ISender mediator) : ApiController
@@ -36,10 +34,7 @@ public class GetAllIssuesController(ISender mediator) : ApiController
 
 internal sealed class GetAllIssuesHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetAllIssuesQuery, ErrorOr<IssuesResult>>
 {
-    public async Task<ErrorOr<IssuesResult>> Handle(
-        GetAllIssuesQuery getAllIssuesQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<IssuesResult>> Handle(GetAllIssuesQuery getAllIssuesQuery, CancellationToken cancellationToken)
     {
         if (LaneId.Create(getAllIssuesQuery.LaneId) is not { } laneId)
             return Errors.EntityId.Invalid;

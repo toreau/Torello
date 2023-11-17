@@ -13,24 +13,12 @@ using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.Commands;
 
-public sealed record UpsertProjectRequest(
-    string Title,
-    string Description
-)
+public sealed record UpsertProjectRequest(string Title, string Description)
 {
-    public UpsertProjectCommand ToCommand(ProjectId? projectId = null)
-        => new(
-            Title,
-            Description,
-            projectId
-        );
+    public UpsertProjectCommand ToCommand(ProjectId? projectId = null) => new(Title, Description, projectId);
 }
 
-public sealed record UpsertProjectCommand(
-    string Title,
-    string Description,
-    ProjectId? ProjectId
-) : IRequest<ErrorOr<ProjectResult>>;
+public sealed record UpsertProjectCommand(string Title, string Description, ProjectId? ProjectId) : IRequest<ErrorOr<ProjectResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
 public sealed class UpsertProjectController(ISender mediator) : ApiController
@@ -87,15 +75,11 @@ public sealed class UpsertProjectValidator : AbstractValidator<UpsertProjectComm
 }
 
 internal sealed class UpsertProjectHandler(
-        IUnitOfWork unitOfWork,
-        IAuthService authService,
-        IUserAccessService userAccessService)
-    : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
+    IUnitOfWork unitOfWork,
+    IAuthService authService,
+    IUserAccessService userAccessService) : IRequestHandler<UpsertProjectCommand, ErrorOr<ProjectResult>>
 {
-    public async Task<ErrorOr<ProjectResult>> Handle(
-        UpsertProjectCommand upsertProjectCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<ProjectResult>> Handle(UpsertProjectCommand upsertProjectCommand, CancellationToken cancellationToken)
     {
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;

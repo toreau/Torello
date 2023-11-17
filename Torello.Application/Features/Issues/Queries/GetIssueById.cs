@@ -11,9 +11,7 @@ using Torello.Domain.Issues;
 
 namespace Torello.Application.Features.Issues.Queries;
 
-public sealed record GetIssueByIdQuery(
-    Guid Id
-) : IRequest<ErrorOr<IssueResult>>;
+public sealed record GetIssueByIdQuery(Guid Id) : IRequest<ErrorOr<IssueResult>>;
 
 [ApiExplorerSettings(GroupName = "Issues")]
 public sealed class GetIssueByIdController(ISender mediator) : ApiController
@@ -36,10 +34,7 @@ public sealed class GetIssueByIdController(ISender mediator) : ApiController
 
 internal sealed class GetIssueByIdHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<GetIssueByIdQuery, ErrorOr<IssueResult>>
 {
-    public async Task<ErrorOr<IssueResult>> Handle(
-        GetIssueByIdQuery getIssueByIdQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<IssueResult>> Handle(GetIssueByIdQuery getIssueByIdQuery, CancellationToken cancellationToken)
     {
         if (IssueId.Create(getIssueByIdQuery.Id) is not { } issueId)
             return Errors.EntityId.Invalid;

@@ -11,9 +11,7 @@ using Torello.Domain.Users;
 
 namespace Torello.Application.Features.Users.Queries;
 
-public sealed record GetUserByIdQuery(
-    Guid Id
-) : IRequest<ErrorOr<UserResult>>;
+public sealed record GetUserByIdQuery(Guid Id) : IRequest<ErrorOr<UserResult>>;
 
 [ApiExplorerSettings(GroupName = "Users")]
 [AllowAnonymous]
@@ -37,10 +35,7 @@ public sealed class GetUserByIdController(ISender mediator) : ApiController
 
 internal sealed class GetUserByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetUserByIdQuery, ErrorOr<UserResult>>
 {
-    public async Task<ErrorOr<UserResult>> Handle(
-        GetUserByIdQuery getUserByIdQuery,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<UserResult>> Handle(GetUserByIdQuery getUserByIdQuery, CancellationToken cancellationToken)
     {
         if (UserId.Create(getUserByIdQuery.Id) is not { } userId)
             return Errors.EntityId.Invalid;

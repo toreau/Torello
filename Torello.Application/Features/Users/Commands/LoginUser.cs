@@ -12,22 +12,12 @@ using Torello.Domain.Users;
 
 namespace Torello.Application.Features.Users.Commands;
 
-public sealed record LoginUserRequest(
-    string Username,
-    string Password
-)
+public sealed record LoginUserRequest(string Username, string Password)
 {
-    public LoginUserCommand ToCommand()
-        => new(
-            Username,
-            Password
-        );
+    public LoginUserCommand ToCommand() => new(Username, Password);
 }
 
-public sealed record LoginUserCommand(
-    string Username,
-    string Password
-) : IRequest<ErrorOr<LoginUserResult>>;
+public sealed record LoginUserCommand(string Username, string Password) : IRequest<ErrorOr<LoginUserResult>>;
 
 [ApiExplorerSettings(GroupName = "Authentication")]
 [AllowAnonymous]
@@ -67,10 +57,7 @@ internal sealed class LoginUserHandler(
         IJwtTokenGenerator jwtTokenGenerator)
     : IRequestHandler<LoginUserCommand, ErrorOr<LoginUserResult>>
 {
-    public async Task<ErrorOr<LoginUserResult>> Handle(
-        LoginUserCommand loginUserCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<LoginUserResult>> Handle(LoginUserCommand loginUserCommand, CancellationToken cancellationToken)
     {
         // Username exists?
         if (await unitOfWork.Users.GetByUsernameAsync(loginUserCommand.Username) is not { } user)
@@ -88,21 +75,9 @@ internal sealed class LoginUserHandler(
     }
 }
 
-internal sealed record LoginUserResult(
-    User User,
-    string JwtToken
-)
+internal sealed record LoginUserResult(User User, string JwtToken)
 {
-    public LoginUserResponse ToResponse()
-        => new(
-            User.Id.Value,
-            User.Username,
-            JwtToken
-        );
+    public LoginUserResponse ToResponse() => new(User.Id.Value, User.Username, JwtToken);
 }
 
-internal sealed record LoginUserResponse(
-    Guid Id,
-    string Username,
-    string JwtToken
-);
+internal sealed record LoginUserResponse(Guid Id, string Username, string JwtToken);

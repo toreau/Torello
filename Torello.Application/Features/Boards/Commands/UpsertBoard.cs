@@ -14,30 +14,13 @@ using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Boards.Commands;
 
-public sealed record UpsertBoardRequest(
-    string Title
-)
+public sealed record UpsertBoardRequest(string Title)
 {
-    public UpsertBoardCommand ToCommand(BoardId? boardId)
-        => new(
-            Title,
-            boardId,
-            null
-        );
-
-    public UpsertBoardCommand ToCommand(ProjectId? projectId)
-        => new(
-            Title,
-            null,
-            projectId
-        );
+    public UpsertBoardCommand ToCommand(BoardId? boardId) => new(Title, boardId, null);
+    public UpsertBoardCommand ToCommand(ProjectId? projectId) => new(Title, null, projectId);
 }
 
-public sealed record UpsertBoardCommand(
-    string Title,
-    BoardId? BoardId,
-    ProjectId? ProjectId
-) : IRequest<ErrorOr<BoardResult>>;
+public sealed record UpsertBoardCommand(string Title, BoardId? BoardId, ProjectId? ProjectId) : IRequest<ErrorOr<BoardResult>>;
 
 [ApiExplorerSettings(GroupName = "Boards")]
 public sealed class UpsertBoardController(ISender mediator) : ApiController
@@ -97,10 +80,7 @@ public sealed class UpsertBoardValidator : AbstractValidator<UpsertBoardCommand>
 
 internal sealed class UpsertBoardHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertBoardCommand, ErrorOr<BoardResult>>
 {
-    public async Task<ErrorOr<BoardResult>> Handle(
-        UpsertBoardCommand upsertBoardCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<BoardResult>> Handle(UpsertBoardCommand upsertBoardCommand, CancellationToken cancellationToken)
     {
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;

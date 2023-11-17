@@ -14,22 +14,12 @@ using Torello.Domain.Users;
 
 namespace Torello.Application.Features.Users.Commands;
 
-public sealed record RegisterUserRequest(
-    string Username,
-    string Password
-)
+public sealed record RegisterUserRequest(string Username, string Password)
 {
-    public RegisterUserCommand ToCommand()
-        => new(
-            Username,
-            Password
-        );
+    public RegisterUserCommand ToCommand() => new(Username, Password);
 }
 
-public sealed record RegisterUserCommand(
-    string Username,
-    string Password
-) : IRequest<ErrorOr<UserResult>>;
+public sealed record RegisterUserCommand(string Username, string Password) : IRequest<ErrorOr<UserResult>>;
 
 [ApiExplorerSettings(GroupName = "Users")]
 [AllowAnonymous]
@@ -78,10 +68,7 @@ internal sealed class RegisterUserHandler(
         IPasswordHasher passwordHasher)
     : IRequestHandler<RegisterUserCommand, ErrorOr<UserResult>>
 {
-    public async Task<ErrorOr<UserResult>> Handle(
-        RegisterUserCommand registerUserCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<UserResult>> Handle(RegisterUserCommand registerUserCommand, CancellationToken cancellationToken)
     {
         // Username already exists?
         var user = await unitOfWork.Users.GetByUsernameAsync(registerUserCommand.Username);

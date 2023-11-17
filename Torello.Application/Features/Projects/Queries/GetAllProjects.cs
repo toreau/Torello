@@ -9,8 +9,7 @@ using Torello.Domain.Common.Errors;
 
 namespace Torello.Application.Features.Projects.Queries;
 
-internal sealed record GetAllProjectsQuery(
-) : IRequest<ErrorOr<ProjectsResult>>;
+internal sealed record GetAllProjectsQuery : IRequest<ErrorOr<ProjectsResult>>;
 
 [ApiExplorerSettings(GroupName = "Projects")]
 public sealed class GetAllProjectsController(ISender mediator) : ApiController
@@ -32,9 +31,7 @@ public sealed class GetAllProjectsController(ISender mediator) : ApiController
 
 internal sealed class GetAllProjectsHandler(IAuthService authService) : IRequestHandler<GetAllProjectsQuery, ErrorOr<ProjectsResult>>
 {
-    public async Task<ErrorOr<ProjectsResult>> Handle(
-        GetAllProjectsQuery getAllProjectsQuery,
-        CancellationToken cancellationToken)
+    public async Task<ErrorOr<ProjectsResult>> Handle(GetAllProjectsQuery getAllProjectsQuery, CancellationToken cancellationToken)
     {
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;

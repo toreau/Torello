@@ -14,30 +14,13 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Application.Features.Lanes.Commands;
 
-public sealed record UpsertLaneRequest(
-    string Title
-)
+public sealed record UpsertLaneRequest(string Title)
 {
-    public UpsertLaneCommand ToCommand(LaneId? laneId)
-        => new(
-            Title,
-            laneId,
-            null
-        );
-
-    public UpsertLaneCommand ToCommand(BoardId? boardId)
-        => new(
-            Title,
-            null,
-            boardId
-        );
+    public UpsertLaneCommand ToCommand(LaneId? laneId) => new(Title, laneId, null);
+    public UpsertLaneCommand ToCommand(BoardId? boardId) => new(Title, null, boardId);
 }
 
-public sealed record UpsertLaneCommand(
-    string Title,
-    LaneId? LaneId,
-    BoardId? BoardId
-) : IRequest<ErrorOr<LaneResult>>;
+public sealed record UpsertLaneCommand(string Title, LaneId? LaneId, BoardId? BoardId) : IRequest<ErrorOr<LaneResult>>;
 
 [ApiExplorerSettings(GroupName = "Lanes")]
 public sealed class UpsertLaneController(ISender mediator) : ApiController
@@ -96,10 +79,7 @@ public sealed class UpsertLaneValidator : AbstractValidator<UpsertLaneCommand>
 
 internal sealed class UpsertLaneHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertLaneCommand, ErrorOr<LaneResult>>
 {
-    public async Task<ErrorOr<LaneResult>> Handle(
-        UpsertLaneCommand upsertLaneCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<LaneResult>> Handle(UpsertLaneCommand upsertLaneCommand, CancellationToken cancellationToken)
     {
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;

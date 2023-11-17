@@ -14,34 +14,13 @@ using Torello.Domain.Lanes;
 
 namespace Torello.Application.Features.Issues.Commands;
 
-public sealed record UpsertIssueRequest(
-    string Title,
-    string Description
-)
+public sealed record UpsertIssueRequest(string Title, string Description)
 {
-    public UpsertIssueCommand ToCommand(IssueId? issueId)
-        => new(
-            Title,
-            Description,
-            issueId,
-            null
-        );
-
-    public UpsertIssueCommand ToCommand(LaneId? laneId)
-        => new(
-            Title,
-            Description,
-            null,
-            laneId
-        );
+    public UpsertIssueCommand ToCommand(IssueId? issueId) => new(Title, Description, issueId, null);
+    public UpsertIssueCommand ToCommand(LaneId? laneId) => new(Title, Description, null, laneId);
 }
 
-public sealed record UpsertIssueCommand(
-    string Title,
-    string Description,
-    IssueId? IssueId,
-    LaneId? LaneId
-) : IRequest<ErrorOr<IssueResult>>;
+public sealed record UpsertIssueCommand(string Title, string Description, IssueId? IssueId, LaneId? LaneId) : IRequest<ErrorOr<IssueResult>>;
 
 [ApiExplorerSettings(GroupName = "Issues")]
 public sealed class UpsertIssueController(ISender mediator) : ApiController
@@ -100,10 +79,7 @@ public sealed class UpsertIssueValidator : AbstractValidator<UpsertIssueCommand>
 
 internal sealed class UpsertIssueHandler(IUnitOfWork unitOfWork, IAuthService authService) : IRequestHandler<UpsertIssueCommand, ErrorOr<IssueResult>>
 {
-    public async Task<ErrorOr<IssueResult>> Handle(
-        UpsertIssueCommand upsertIssueCommand,
-        CancellationToken cancellationToken
-    )
+    public async Task<ErrorOr<IssueResult>> Handle(UpsertIssueCommand upsertIssueCommand, CancellationToken cancellationToken)
     {
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
