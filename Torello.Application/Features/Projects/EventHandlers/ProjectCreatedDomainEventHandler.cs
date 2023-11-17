@@ -1,5 +1,4 @@
 using Torello.Domain.Common.Interfaces;
-using Torello.Domain.Common.Primitives;
 using Torello.Domain.Projects;
 
 namespace Torello.Application.Features.Projects.EventHandlers;
