@@ -4,5 +4,5 @@ namespace Torello.Application.Common.Interfaces;
 
 public interface IUserAccessService
 {
-    Task<bool> CurrentUserCanAccess(Project project);
+    Task<bool> CurrentUserCanAccessProject(Project project);
 }

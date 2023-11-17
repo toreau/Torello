@@ -6,12 +6,12 @@ namespace Torello.Infrastructure.Authentication;
 
 public sealed class UserAccessService(IAuthService authService) : IUserAccessService
 {
-    public async Task<bool> CurrentUserCanAccess(Project project)
+    public async Task<bool> CurrentUserCanAccessProject(Project project)
     {
-        return UserCanAccess(await authService.GetCurrentUserAsync(), project);
+        return UserCanAccessProject(await authService.GetCurrentUserAsync(), project);
     }
 
-    private bool UserCanAccess(User? user, Project project)
+    private bool UserCanAccessProject(User? user, Project project)
     {
         return user != null && user.Equals(project.User);
     }
