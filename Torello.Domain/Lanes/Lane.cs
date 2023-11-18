@@ -11,7 +11,7 @@ public class Lane : Entity<LaneId>
 
     // Navigation
     public virtual Board Board { get; private set; } = null!;
-    private readonly List<Issue> _issues = new List<Issue>();
+    private readonly List<Issue> _issues = new();
     public virtual IReadOnlyList<Issue> Issues => _issues.AsReadOnly();
 
     private Lane(LaneId id, string title ) : base(id)

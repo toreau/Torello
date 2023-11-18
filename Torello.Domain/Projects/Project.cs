@@ -12,7 +12,7 @@ public class Project : Entity<ProjectId>
 
     // Navigation
     public virtual User User { get; private set; } = null!;
-    private readonly List<Board> _boards = new List<Board>();
+    private readonly List<Board> _boards = new();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
     private Project(ProjectId id, string title, string description,DateTimeOffset createdAt) : base(id)

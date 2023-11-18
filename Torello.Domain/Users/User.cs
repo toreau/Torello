@@ -10,7 +10,7 @@ public class User : Entity<UserId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    private readonly List<Project> _projects = new List<Project>();
+    private readonly List<Project> _projects = new();
     public virtual IReadOnlyList<Project> Projects => _projects.AsReadOnly();
 
     private User(UserId id, string username, string hashedPassword, DateTimeOffset createdAt) : base(id)
