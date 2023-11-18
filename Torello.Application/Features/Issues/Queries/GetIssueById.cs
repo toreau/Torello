@@ -45,7 +45,7 @@ internal sealed class GetIssueByIdHandler(IUnitOfWork unitOfWork, IAuthService a
         if (await unitOfWork.Issues.GetByIdAsync(issueId) is not { } issue)
             return Errors.Issues.NotFound;
 
-        if (issue.User.Id != user.Id)
+        if (issue.Owner.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new IssueResult(issue);

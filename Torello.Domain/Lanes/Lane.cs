@@ -29,7 +29,7 @@ public class Lane : Entity<LaneId>
         Title = title;
     }
 
-    public User User => Board.User;
+    public User Owner => Board.Owner;
 
     public void AddIssue(Issue issue)
     {

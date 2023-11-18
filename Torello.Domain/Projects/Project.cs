@@ -11,7 +11,7 @@ public class Project : Entity<ProjectId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    public virtual User User { get; private set; } = null!;
+    public virtual User Owner { get; private set; } = null!;
     private readonly List<Board> _boards = new();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
@@ -25,9 +25,6 @@ public class Project : Entity<ProjectId>
     public static Project Create(string title, string description)
     {
         var project = new Project(ProjectId.CreateUnique(), title, description, DateTimeOffset.UtcNow);
-
-        // Add default/example board
-        project.AddBoard(Board.Create("Example board"));
 
         project.AddDomainEvent(new ProjectCreatedDomainEvent(project));
 

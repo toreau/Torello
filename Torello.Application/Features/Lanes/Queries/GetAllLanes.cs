@@ -45,7 +45,7 @@ internal sealed class GetAllLanesHandler(IUnitOfWork unitOfWork, IAuthService au
         if (await unitOfWork.Boards.GetByIdAsync(boardId) is not { } board)
             return Errors.Boards.NotFound;
 
-        if (board.User.Id != user.Id)
+        if (board.Owner.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new LanesResult(board.Lanes);

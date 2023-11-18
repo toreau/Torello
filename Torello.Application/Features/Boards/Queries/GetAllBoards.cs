@@ -45,7 +45,7 @@ internal sealed class GetAllBoardsHandler(IUnitOfWork unitOfWork, IAuthService a
         if (await unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
 
-        if (project.User.Id != user.Id)
+        if (project.Owner.Id != user.Id)
             return Errors.Users.InvalidCredentials;
 
         return new BoardsResult(project.Boards);

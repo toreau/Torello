@@ -13,6 +13,6 @@ public sealed class UserAccessService(IAuthService authService) : IUserAccessSer
 
     private bool UserCanAccessProject(User? user, Project project)
     {
-        return user != null && user.Equals(project.User);
+        return user != null && user.Equals(project.Owner);
     }
 }

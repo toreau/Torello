@@ -96,7 +96,7 @@ internal sealed class UpsertBoardHandler(IUnitOfWork unitOfWork, IAuthService au
                 return Errors.Boards.NotFound;
 
             // Is the board's owner the same as the one logged in?
-            if (board.User.Id != user.Id)
+            if (board.Owner.Id != user.Id)
                 return Errors.Users.InvalidCredentials;
 
             board.Update(upsertBoardCommand.Title);
@@ -108,7 +108,12 @@ internal sealed class UpsertBoardHandler(IUnitOfWork unitOfWork, IAuthService au
             if (await unitOfWork.Projects.GetByIdAsync(upsertBoardCommand.ProjectId!) is not { } project)
                 return Errors.Projects.NotFound;
 
-            board = Board.Create(upsertBoardCommand.Title);
+            // Is the logged in user allowed to create a board on this project?
+            if (project.Owner.Id != user.Id)
+                return Errors.Users.InvalidCredentials;
+
+            // Create a new board and add it to the project.
+            board = Board.Create(upsertBoardCommand.Title, user);
 
             project.AddBoard(board);
         }

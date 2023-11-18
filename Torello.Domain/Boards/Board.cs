@@ -12,18 +12,20 @@ public class Board : Entity<BoardId>
 
     // Navigation
     public virtual Project Project { get; private set; } = null!;
+    public virtual User CreatedBy { get; private set; } = null!;
     private readonly List<Lane> _lanes = new();
     public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 
-    private Board(BoardId id, string title, DateTimeOffset createdAt) : base(id)
+    private Board(BoardId id, string title, DateTimeOffset createdAt, User createdBy) : base(id)
     {
         Title = title;
         CreatedAt = createdAt;
+        CreatedBy = createdBy;
     }
 
-    public static Board Create(string title)
+    public static Board Create(string title, User createdBy)
     {
-        var board = new Board(BoardId.CreateUnique(), title, DateTimeOffset.UtcNow);
+        var board = new Board(BoardId.CreateUnique(), title, DateTimeOffset.UtcNow, createdBy);
 
         // Add some default/example lanes
         foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
@@ -37,7 +39,7 @@ public class Board : Entity<BoardId>
         Title = title;
     }
 
-    public User User => Project.User;
+    public User Owner => Project.Owner;
 
     public void AddLane(Lane lane)
     {
