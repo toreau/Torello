@@ -25,11 +25,11 @@ public class TorelloDbContext(DbContextOptions<TorelloDbContext> options) : DbCo
         modelBuilder
             .ApplyConfigurationsFromAssembly(typeof(TorelloDbContext).Assembly);
 
-        // I want lowercased and singular table names
+        // I want lowercased table names
         // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         //     entityType.SetTableName(entityType.DisplayName().ToLowerInvariant());
 
-        // I want singular table table names
+        // I want singular table names
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             entityType.SetTableName(entityType.DisplayName());
 
