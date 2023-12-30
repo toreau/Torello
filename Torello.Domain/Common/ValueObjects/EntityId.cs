@@ -1,11 +1,12 @@
+using System.Data.SqlTypes;
 using SequentialGuid;
 using ValueOf;
 
 namespace Torello.Domain.Common.ValueObjects;
 
-public class EntityId<TThis> : ValueOf<Guid, TThis> where TThis : EntityId<TThis>, new()
+public class EntityId<TThis> : ValueOf<SqlGuid, TThis> where TThis : EntityId<TThis>, new()
 {
-    public static TThis CreateUnique() => From(SequentialGuidGenerator.Instance.NewGuid());
+    public static TThis CreateUnique() => From(SequentialGuidGenerator.Instance.NewGuid().ToSqlGuid());
 
     public static TThis? Create(string value)
     {

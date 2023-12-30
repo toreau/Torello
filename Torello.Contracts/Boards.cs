@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using Torello.Domain.Boards;
 
 namespace Torello.Contracts;
@@ -8,7 +9,7 @@ public sealed record BoardResult(Board Board)
     public BoardResponse ToResponse() => new(Board.Id.Value, Board.Title, Board.CreatedAt);
 }
 
-public sealed record BoardResponse(Guid Id, string Title, DateTimeOffset CreatedAt);
+public sealed record BoardResponse(SqlGuid Id, string Title, DateTimeOffset CreatedAt);
 
 // Multiple
 public sealed record BoardsResult(IEnumerable<Board> Boards)
