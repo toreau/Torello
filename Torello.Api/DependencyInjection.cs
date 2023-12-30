@@ -19,10 +19,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddSwagger(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    private static void AddSwagger(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var swaggerSettings = new SwaggerSettings();
         configuration.Bind(SwaggerSettings.SectionName, swaggerSettings);
@@ -84,7 +82,5 @@ public static class DependencyInjection
             // var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             // c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
-
-        return services;
     }
 }

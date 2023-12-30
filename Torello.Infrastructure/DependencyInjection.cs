@@ -15,16 +15,12 @@ namespace Torello.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static void AddInfrastructure(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services
             .AddPersistence(configuration)
             .AddAuth(configuration);
-
-        return services;
     }
 
     private static IServiceCollection AddPersistence(
@@ -40,10 +36,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAuth(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    private static void AddAuth(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
@@ -65,10 +59,7 @@ public static class DependencyInjection
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
             });
-
-        return services;
     }
 }
