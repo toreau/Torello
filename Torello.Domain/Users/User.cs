@@ -12,7 +12,7 @@ public class User : Entity<UserId>
 
     // Navigation
     private readonly List<UserProject> _userProjects = new();
-    public IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
+    public virtual IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
 
     private User(UserId id, string username, string hashedPassword, DateTimeOffset createdAt) : base(id)
     {
