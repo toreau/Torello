@@ -6,10 +6,12 @@ namespace Torello.Domain.UserProjects;
 public class UserProject
 {
     public UserId UserId { get; private set; }
-    public virtual User User { get; private set; }
     public ProjectId ProjectId { get; private set; }
-    public virtual Project Project { get; private set; }
     public UserProjectRole Role { get; private set; }
+
+    // Navigation
+    public virtual User User { get; private set; }
+    public virtual Project Project { get; private set; }
 
     private UserProject(User user, Project project, UserProjectRole role)
     {
