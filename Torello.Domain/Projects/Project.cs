@@ -1,5 +1,6 @@
 using Torello.Domain.Boards;
 using Torello.Domain.Common.Primitives;
+using Torello.Domain.UserProjects;
 using Torello.Domain.Users;
 
 namespace Torello.Domain.Projects;
@@ -11,7 +12,8 @@ public class Project : Entity<ProjectId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    public virtual User Owner { get; private set; } = null!;
+    private readonly List<UserProject> _userProjects = new();
+    public virtual IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
     private readonly List<Board> _boards = new();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 

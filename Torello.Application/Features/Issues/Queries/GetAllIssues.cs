@@ -45,8 +45,8 @@ internal sealed class GetAllIssuesHandler(IUnitOfWork unitOfWork, IAuthService a
         if (await unitOfWork.Lanes.GetByIdAsync(laneId) is not { } lane)
             return Errors.Lanes.NotFound;
 
-        if (lane.Owner.Id != user.Id)
-            return Errors.Users.InvalidCredentials;
+        // if (lane.Owner.Id != user.Id)
+        //     return Errors.Users.InvalidCredentials;
 
         return new IssuesResult(lane.Issues);
     }

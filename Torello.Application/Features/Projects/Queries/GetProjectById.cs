@@ -47,8 +47,8 @@ internal sealed class GetProjectByIdHandler(
         if (await unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
 
-        if (project.Owner.Id != user.Id)
-            return Errors.Users.InvalidCredentials;
+        // if (project.Owner.Id != user.Id)
+        //     return Errors.Users.InvalidCredentials;
 
         return new ProjectResult(project);
     }

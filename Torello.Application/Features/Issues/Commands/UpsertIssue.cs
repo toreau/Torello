@@ -95,8 +95,8 @@ internal sealed class UpsertIssueHandler(IUnitOfWork unitOfWork, IAuthService au
                 return Errors.Issues.NotFound;
 
             // Is the issue's owner the same as the one logged in?
-            if (issue.Owner.Id != user.Id)
-                return Errors.Users.InvalidCredentials;
+            // if (issue.Owner.Id != user.Id)
+            //     return Errors.Users.InvalidCredentials;
 
             issue.Update(
                 upsertIssueCommand.Title,

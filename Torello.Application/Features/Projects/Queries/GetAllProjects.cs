@@ -36,6 +36,6 @@ internal sealed class GetAllProjectsHandler(IAuthService authService) : IRequest
         if (await authService.GetCurrentUserAsync() is not { } user)
             return Errors.Users.InvalidCredentials;
 
-        return new ProjectsResult(user.Projects);
+        return new ProjectsResult(user.Projects());
     }
 }

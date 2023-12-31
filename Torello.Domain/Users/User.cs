@@ -1,5 +1,6 @@
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Projects;
+using Torello.Domain.UserProjects;
 
 namespace Torello.Domain.Users;
 
@@ -10,8 +11,8 @@ public class User : Entity<UserId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     // Navigation
-    private readonly List<Project> _projects = new();
-    public virtual IReadOnlyList<Project> Projects => _projects.AsReadOnly();
+    private readonly List<UserProject> _userProjects = new();
+    public virtual IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
 
     private User(UserId id, string username, string hashedPassword, DateTimeOffset createdAt) : base(id)
     {
@@ -33,9 +34,15 @@ public class User : Entity<UserId>
         return user;
     }
 
+    public IEnumerable<Project> Projects()
+    {
+        return UserProjects.Select(up => up.Project);
+    }
+
     public void AddProject(Project project)
     {
-        _projects.Add(project);
+        var userProject = UserProject.Create(this, project, UserProjectRole.Owner);
+        _userProjects.Add(userProject);
     }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

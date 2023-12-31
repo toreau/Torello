@@ -5,6 +5,7 @@ using Torello.Domain.Boards;
 using Torello.Domain.Issues;
 using Torello.Domain.Lanes;
 using Torello.Domain.Projects;
+using Torello.Domain.UserProjects;
 using Torello.Domain.Users;
 
 namespace Torello.Infrastructure.Persistence;
@@ -13,6 +14,7 @@ public class TorelloDbContext(DbContextOptions<TorelloDbContext> options) : DbCo
 {
     public required DbSet<User> Users { get; set; }
     public required DbSet<Project> Projects { get; set; }
+    public required DbSet<UserProject> UserProjects { get; set; }
     public required DbSet<Board> Boards { get; set; }
     public required DbSet<Lane> Lanes { get; set; }
     public required DbSet<Issue> Issues { get; set; }

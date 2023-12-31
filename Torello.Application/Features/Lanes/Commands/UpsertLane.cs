@@ -95,8 +95,8 @@ internal sealed class UpsertLaneHandler(IUnitOfWork unitOfWork, IAuthService aut
                 return Errors.Lanes.NotFound;
 
             // Is the lane's owner the same as the one logged in?
-            if (lane.Owner.Id != user.Id)
-                return Errors.Users.InvalidCredentials;
+            // if (lane.Owner.Id != user.Id)
+            //     return Errors.Users.InvalidCredentials;
 
             lane.Update(upsertLaneCommand.Title);
         }
