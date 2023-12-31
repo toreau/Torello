@@ -17,7 +17,7 @@ public class Project : Entity<ProjectId>
     private readonly List<Board> _boards = new();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
-    private Project(ProjectId id, string title, string description,DateTimeOffset createdAt) : base(id)
+    private Project(ProjectId id, string title, string description, DateTimeOffset createdAt) : base(id)
     {
         Title = title;
         Description = description;
