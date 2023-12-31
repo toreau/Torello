@@ -5,8 +5,8 @@ namespace Torello.Domain.UserProjects;
 
 public class UserProject
 {
-    public UserId UserId { get; private set; }
-    public ProjectId ProjectId { get; private set; }
+    public UserId UserId { get; private set; } = null!;
+    public ProjectId ProjectId { get; private set; } = null!;
     public UserProjectRole Role { get; private set; }
 
     // Navigation
