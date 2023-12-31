@@ -39,8 +39,6 @@ public class Board : Entity<BoardId>
         Title = title;
     }
 
-    // public User Owner => Project.Owner;
-
     public void AddLane(Lane lane)
     {
         _lanes.Add(lane);

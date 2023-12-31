@@ -29,8 +29,6 @@ public class Lane : Entity<LaneId>
         Title = title;
     }
 
-    // public User Owner => Board.Owner;
-
     public void AddIssue(Issue issue)
     {
         _issues.Add(issue);
