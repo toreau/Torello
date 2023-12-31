@@ -9,7 +9,7 @@ public sealed class UserAccessService(IAuthService authService) : IUserAccessSer
 {
     public async Task<bool> CurrentUserCanAccessProject(Project project)
     {
-        return UserCanAccessProject(await authService.GetCurrentUserAsync(), project);
+        return UserCanViewProject(await authService.GetCurrentUserAsync(), project);
     }
 
     public async Task<bool> CurrentUserCanEditProject(Project project)
@@ -17,12 +17,12 @@ public sealed class UserAccessService(IAuthService authService) : IUserAccessSer
         return UserCanEditProject(await authService.GetCurrentUserAsync(), project);
     }
 
-    private bool UserCanAccessProject(User? user, Project project)
+    private static bool UserCanViewProject(User? user, Project project)
     {
         return user is not null && user.UserProjects.Any(up => up.ProjectId == project.Id);
     }
 
-    private bool UserCanEditProject(User? user, Project project)
+    private static bool UserCanEditProject(User? user, Project project)
     {
         return user is not null && user.UserProjects.Any(up => up.ProjectId == project.Id
                                                                && (up.Role is UserProjectRole.Owner
