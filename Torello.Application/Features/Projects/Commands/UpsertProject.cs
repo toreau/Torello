@@ -95,7 +95,7 @@ internal sealed class UpsertProjectHandler(
                 return Errors.Projects.NotFound;
 
             // Can the currently logged in user access it?
-            if (!await userAccessService.CurrentUserCanAccessProject(project))
+            if (!await userAccessService.CurrentUserCanViewProject(project))
                 return Errors.Users.InvalidCredentials;
 
             project.Update(

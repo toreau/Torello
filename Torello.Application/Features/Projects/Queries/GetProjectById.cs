@@ -34,21 +34,18 @@ public sealed class GetProjectByIdController(ISender mediator) : ApiController
 
 internal sealed class GetProjectByIdHandler(
     IUnitOfWork unitOfWork,
-    IAuthService authService) : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
+    IUserAccessService userAccessService) : IRequestHandler<GetProjectByIdQuery, ErrorOr<ProjectResult>>
 {
     public async Task<ErrorOr<ProjectResult>> Handle(GetProjectByIdQuery getProjectByIdQuery, CancellationToken cancellationToken)
     {
         if (ProjectId.Create(getProjectByIdQuery.ProjectId) is not { } projectId)
             return Errors.EntityId.Invalid;
 
-        if (await authService.GetCurrentUserAsync() is not { } user)
-            return Errors.Users.InvalidCredentials;
-
         if (await unitOfWork.Projects.GetByIdAsync(projectId) is not { } project)
             return Errors.Projects.NotFound;
 
-        // if (project.Owner.Id != user.Id)
-        //     return Errors.Users.InvalidCredentials;
+        if (!await userAccessService.CurrentUserCanViewProject(project))
+            return Errors.Users.InvalidCredentials;
 
         return new ProjectResult(project);
     }
