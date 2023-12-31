@@ -12,7 +12,7 @@ public class User : Entity<UserId>
 
     // Navigation
     private readonly List<UserProject> _userProjects = new();
-    public virtual IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
+    public IReadOnlyList<UserProject> UserProjects => _userProjects.AsReadOnly();
 
     private User(UserId id, string username, string hashedPassword, DateTimeOffset createdAt) : base(id)
     {
@@ -28,8 +28,7 @@ public class User : Entity<UserId>
         // Add default/example project
         user.AddProject(Project.Create(
             "Your first project",
-            "Add sensible description of the project, if need be."
-        ));
+            "Add sensible description of the project, if need be."));
 
         return user;
     }
