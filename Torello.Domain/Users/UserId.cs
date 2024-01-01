@@ -1,4 +1,4 @@
-using Torello.Domain.Common.ValueObjects;
+using Torello.Domain.Common.Primitives;
 
 namespace Torello.Domain.Users;
 

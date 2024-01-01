@@ -2,7 +2,7 @@ using System.Data.SqlTypes;
 using SequentialGuid;
 using ValueOf;
 
-namespace Torello.Domain.Common.ValueObjects;
+namespace Torello.Domain.Common.Primitives;
 
 public class EntityId<TThis> : ValueOf<SqlGuid, TThis> where TThis : EntityId<TThis>, new()
 {
