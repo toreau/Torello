@@ -6,7 +6,7 @@ namespace Torello.Contracts;
 // Single
 public sealed record ProjectResult(Project Project)
 {
-    public ProjectResponse ToResponse() => new(Project.Id.Value.ToGuid(), Project.Title, Project.Description, Project.CreatedAt);
+    public ProjectResponse ToResponse() => new(Project.Id.Value, Project.Title, Project.Description, Project.CreatedAt);
 }
 
 public sealed record ProjectResponse(Guid Id, string Title, string Description, DateTimeOffset CreatedAt);

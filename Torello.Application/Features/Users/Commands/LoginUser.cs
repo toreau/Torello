@@ -81,4 +81,4 @@ internal sealed record LoginUserResult(User User, string JwtToken)
     public LoginUserResponse ToResponse() => new(User.Id.Value, User.Username, JwtToken);
 }
 
-internal sealed record LoginUserResponse(SqlGuid Id, string Username, string JwtToken);
+internal sealed record LoginUserResponse(Guid Id, string Username, string JwtToken);

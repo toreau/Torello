@@ -6,7 +6,7 @@ namespace Torello.Contracts;
 // Single
 public sealed record BoardResult(Board Board)
 {
-    public BoardResponse ToResponse() => new(Board.Id.Value.ToGuid(), Board.Title, Board.CreatedAt);
+    public BoardResponse ToResponse() => new(Board.Id.Value, Board.Title, Board.CreatedAt);
 }
 
 public sealed record BoardResponse(Guid Id, string Title, DateTimeOffset CreatedAt);

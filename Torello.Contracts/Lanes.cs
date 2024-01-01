@@ -6,7 +6,7 @@ namespace Torello.Contracts;
 // Single
 public sealed record LaneResult(Lane Lane)
 {
-    public LaneResponse ToResponse() => new(Lane.Id.Value.ToGuid(), Lane.Title);
+    public LaneResponse ToResponse() => new(Lane.Id.Value, Lane.Title);
 }
 
 public sealed record LaneResponse(Guid Id, string Title);
