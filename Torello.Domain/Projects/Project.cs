@@ -16,16 +16,16 @@ public class Project : Entity<ProjectId>
     private readonly List<Board> _boards = new();
     public virtual IReadOnlyList<Board> Boards => _boards.AsReadOnly();
 
-    private Project(ProjectId id, string title, string description, DateTimeOffset createdAt) : base(id)
+    private Project(ProjectId id, string title, string description) : base(id)
     {
         Title = title;
         Description = description;
-        CreatedAt = createdAt;
+        CreatedAt = DateTimeOffset.UtcNow;
     }
 
     public static Project Create(string title, string description)
     {
-        var project = new Project(ProjectId.CreateUnique(), title, description, DateTimeOffset.UtcNow);
+        var project = new Project(ProjectId.CreateUnique(), title, description);
 
         project.AddDomainEvent(new ProjectCreatedDomainEvent(project));
 

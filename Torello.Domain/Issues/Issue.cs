@@ -14,18 +14,17 @@ public class Issue : Entity<IssueId>
     // Navigation
     public virtual Lane Lane { get; private set; } = null!;
 
-    private Issue(IssueId id, string title, string description, IssuePriority priority, DateTimeOffset createdAt, DateTimeOffset? updatedAt) : base(id)
+    private Issue(IssueId id, string title, string description, IssuePriority priority) : base(id)
     {
         Title = title;
         Description = description;
         Priority = priority;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAt = DateTimeOffset.UtcNow;
     }
 
     public static Issue Create(string title, string description, IssuePriority priority)
     {
-        return new Issue(IssueId.CreateUnique(), title, description, priority, DateTimeOffset.UtcNow, null);
+        return new Issue(IssueId.CreateUnique(), title, description, priority);
     }
 
     public void Update(string title, string description)

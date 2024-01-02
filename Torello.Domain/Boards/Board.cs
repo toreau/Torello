@@ -16,16 +16,16 @@ public class Board : Entity<BoardId>
     private readonly List<Lane> _lanes = new();
     public virtual IReadOnlyList<Lane> Lanes => _lanes.AsReadOnly();
 
-    private Board(BoardId id, string title, DateTimeOffset createdAt, User createdBy) : base(id)
+    private Board(BoardId id, string title, User createdBy) : base(id)
     {
         Title = title;
-        CreatedAt = createdAt;
+        CreatedAt = DateTimeOffset.UtcNow;
         CreatedBy = createdBy;
     }
 
     public static Board Create(string title, User createdBy)
     {
-        var board = new Board(BoardId.CreateUnique(), title, DateTimeOffset.UtcNow, createdBy);
+        var board = new Board(BoardId.CreateUnique(), title, createdBy);
 
         // Add some default/example lanes
         foreach (var laneTitle in new[] { "Backlog", "Todo", "Doing", "Done" })
