@@ -7,6 +7,7 @@ public class UserProject
 {
     public UserId UserId { get; private set; } = null!;
     public ProjectId ProjectId { get; private set; } = null!;
+    public DateTimeOffset CreatedAt { get; private set; }
     public UserProjectRole Role { get; private set; }
 
     // Navigation
@@ -17,6 +18,7 @@ public class UserProject
     {
         User = user;
         Project = project;
+        CreatedAt = DateTimeOffset.UtcNow;
         Role = role;
     }
 
