@@ -28,7 +28,8 @@ public class User : Entity<UserId>
         // Add default/example project
         user.AddProject(Project.Create(
             "Your first project",
-            "Add sensible description of the project, if need be."));
+            "Add sensible description of the project, if need be."),
+            UserProjectRole.Owner);
 
         return user;
     }
@@ -38,9 +39,9 @@ public class User : Entity<UserId>
         return UserProjects.Select(up => up.Project);
     }
 
-    public void AddProject(Project project)
+    public void AddProject(Project project, UserProjectRole role)
     {
-        var userProject = UserProject.Create(this, project, UserProjectRole.Owner);
+        var userProject = UserProject.Create(this, project, role);
         _userProjects.Add(userProject);
     }
 
