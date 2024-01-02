@@ -1,4 +1,3 @@
-using System.Data.SqlTypes;
 using Torello.Domain.Projects;
 
 namespace Torello.Contracts;

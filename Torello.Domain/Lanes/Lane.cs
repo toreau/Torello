@@ -1,7 +1,6 @@
 using Torello.Domain.Boards;
 using Torello.Domain.Common.Primitives;
 using Torello.Domain.Issues;
-using Torello.Domain.Users;
 
 namespace Torello.Domain.Lanes;
 
